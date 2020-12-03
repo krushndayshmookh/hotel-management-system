@@ -1,0 +1,7 @@
+{
+  "appId": "dev.rootkings.bellboy",
+  "appName": "Bellboy",
+  "bundledWebRuntime": false,
+  "npmClient": "npm",
+  "webDir": "www"
+}
