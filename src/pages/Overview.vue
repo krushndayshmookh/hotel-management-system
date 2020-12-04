@@ -1,7 +1,7 @@
 <template>
   <q-page>
-    <div class="hotel-banner-container text-center" height="100px">
-      <img :src="hotelLogoBanner" />
+    <div class="hotel-banner-container text-center">
+      <q-img :src="hotelLogoBanner" height="128px" />
     </div>
 
     <div class="q-pa-md">
