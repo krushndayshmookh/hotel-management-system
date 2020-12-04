@@ -5,6 +5,14 @@
         <q-toolbar-title>
           Bellboy
         </q-toolbar-title>
+
+        <q-btn
+          flat
+          round
+          dense
+          :icon="locked ? 'lock' : 'lock_open'"
+          @click="toggleLock"
+        />
       </q-toolbar>
     </q-header>
 
@@ -17,9 +25,19 @@
 <script>
 export default {
   name: "MainLayout",
+
   components: {},
+
   data() {
-    return {};
+    return {
+      locked: false
+    };
+  },
+
+  methods: {
+    toggleLock() {
+      this.locked = !this.locked;
+    }
   }
 };
 </script>
