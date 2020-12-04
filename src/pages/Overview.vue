@@ -26,18 +26,31 @@
         </tbody>
       </q-markup-table>
     </div>
+
+    <q-dialog v-model="showRoomOptions" persistent>
+      <RoomUpdateCard :room="selectedRoom" />
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
 import moment from "moment-timezone";
 
+import RoomUpdateCard from "components/RoomUpdateCard";
+
 export default {
   name: "PageOverview",
+
+  components: {
+    RoomUpdateCard
+  },
 
   data() {
     return {
       hotelLogoBanner: "https://picsum.photos/1024/128",
+
+      showRoomOptions: false,
+      selectedRoom: null,
 
       floors: [
         {
@@ -91,7 +104,8 @@ export default {
 
   methods: {
     viewRoom(room) {
-      console.log("view", {...room});
+      this.selectedRoom = room;
+      this.showRoomOptions = true;
     }
   }
 };
