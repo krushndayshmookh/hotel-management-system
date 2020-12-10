@@ -47,9 +47,20 @@ export default {
 
   data() {
     return {
-      locked: false,
+      // locked: false,
       connected: false
     };
+  },
+
+  computed: {
+    locked: {
+      get() {
+        return this.$store.getters["general/locked"];
+      },
+      set(value) {
+        return this.$store.dispatch("general/setLock", value);
+      }
+    }
   },
 
   methods: {
