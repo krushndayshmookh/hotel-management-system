@@ -99,11 +99,21 @@ export default {
   computed: {
     reversedFloors() {
       return [...this.floors].sort((a, b) => b.order - a.order);
+    },
+
+    locked: {
+      get() {
+        return this.$store.getters["general/locked"];
+      }
     }
   },
 
   methods: {
-    viewRoom(room) {
+    async viewRoom(room) {
+      if (this.locked) {
+        return this.$store.dispatch("general/setLock", false);
+      }
+
       this.selectedRoom = room;
       this.showRoomOptions = true;
     }
