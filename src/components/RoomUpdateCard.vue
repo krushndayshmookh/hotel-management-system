@@ -211,7 +211,7 @@ export default {
     roomState: {
       deep: true,
       handler(newRoomState) {
-        // this.debouncedSaveRoom(newRoomState);
+        this.debouncedSaveRoom(newRoomState);
       }
     }
   },
@@ -315,9 +315,9 @@ export default {
 
     saveRoom(roomState) {
       this.$db.Room.update(
-        { _id: this.roomState._id },
+        { _id: roomState._id },
+        roomState,
         { returnUpdatedDocs: true, upsert: true },
-        this.roomState,
         function(err, numAffected, docs) {
           if (err) console.error(err);
           console.log(docs);
