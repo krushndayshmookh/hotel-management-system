@@ -211,7 +211,7 @@ export default {
     roomState: {
       deep: true,
       handler(newRoomState) {
-        this.debouncedSaveRoom(newRoomState);
+        if (this.mountedWasRun) this.debouncedSaveRoom(newRoomState);
       }
     }
   },
@@ -219,6 +219,7 @@ export default {
   data() {
     return {
       expandedValue: true,
+      mountedWasRun: false,
 
       roomState: {
         _id: null,
@@ -256,6 +257,10 @@ export default {
     this.debouncedSaveRoom = _.debounce(this.saveRoom, 500);
 
     this.fetchRoom();
+  },
+
+  mounted() {
+    setTimeout(() => (this.mountedWasRun = true), 0);
   },
 
   destroyed() {
