@@ -242,9 +242,9 @@ export default {
       expandedValue: true,
       mountedWasRun: false,
 
-      roomState: initialStates.room,
-      guest: initialStates.guest,
-      booking: initialStates.booking
+      roomState: { ...initialStates.room },
+      guest: { ...initialStates.guest },
+      booking: { ...initialStates.booking }
     };
   },
 
@@ -307,14 +307,20 @@ export default {
     },
 
     async checkOut() {
-      let { bookingCheckOut } = this.$refs;
+      let {
+        bookingCheckOut,
+        guestName,
+        bookingCheckIn,
+        bookingRent
+      } = this.$refs;
 
       bookingCheckOut.validate();
 
       let hasError = bookingCheckOut.hasError;
 
       if (!hasError) {
-        this.$q.loading.show();
+        // this.$q.loading.show();
+        this.$emit("bill", this.booking);
 
         await this.$db.Booking.asyncUpdate(
           { _id: this.booking._id },
@@ -326,15 +332,20 @@ export default {
         );
 
         this.guest = initialStates.guest;
-        this.booking = initialStates.booking;
+        this.booking = { ...initialStates.booking };
+
         bookingCheckOut.resetValidation();
+        guestName.resetValidation();
+        bookingCheckIn.resetValidation();
+        bookingRent.resetValidation();
+
         this.roomState.occupied = false;
 
         this.$q.notify({
           type: "positive",
           message: "Checked out."
         });
-        this.$q.loading.hide();
+        // this.$q.loading.hide();
       }
     },
 
