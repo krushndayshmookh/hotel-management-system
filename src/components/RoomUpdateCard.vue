@@ -281,9 +281,7 @@ export default {
       bookingRent.validate();
 
       let hasError =
-        guestName.hasError ||
-        bookingCheckIn.hasError ||
-        bookingRent.hasError;
+        guestName.hasError || bookingCheckIn.hasError || bookingRent.hasError;
 
       if (!hasError) {
         this.$q.loading.show();
@@ -368,7 +366,6 @@ export default {
         { returnUpdatedDocs: true, upsert: true },
         function(err, numAffected, docs) {
           if (err) console.error(err);
-          console.log(docs);
         }
       );
     }

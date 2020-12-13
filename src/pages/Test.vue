@@ -93,7 +93,7 @@ export default {
       await Floor.asyncInsert(floors);
       await Booking.asyncInsert(bookings);
 
-      this.$q.notify("Generated fresh data.");
+      this.$q.notify({ type: "success", message: "Generated fresh data." });
 
       this.displayData();
       this.$q.loading.hide();
