@@ -70,11 +70,13 @@ const bookings = [
     room: "g1",
     checkIn: new moment.tz("Asia/Kolkata").subtract(5, "days").toDate(),
     checkOut: new moment.tz("Asia/Kolkata").subtract(3, "days").toDate(),
+    rent: 500
   },
   {
     guest: "c1",
     room: "11",
     checkIn: new moment.tz("Asia/Kolkata").toDate(),
+    rent: 400
   }
 ];
 
@@ -104,7 +106,6 @@ export default {
       await Room.asyncRemove({});
       await Floor.asyncRemove({});
       await Booking.asyncRemove({});
-
     },
 
     async displayData() {

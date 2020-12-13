@@ -11,6 +11,7 @@ interface Booking {
   room: Room;
   checkIn: Date;
   checkOut?: Date;
+  rent: number;
 }
 
 interface Floor {
