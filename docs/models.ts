@@ -3,6 +3,7 @@ interface Room {
   label: string;
   occupied: boolean;
   available: boolean;
+  floor: Floor;
 }
 
 interface Booking {
@@ -16,7 +17,6 @@ interface Floor {
   _id: string;
   label: string;
   order: number;
-  rooms: Room[];
 }
 
 interface Guest {
