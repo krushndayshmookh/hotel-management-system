@@ -21,6 +21,11 @@ const Booking = new Datastore({
   autoload: true
 });
 
+Guest.ensureIndex({ fieldName: "_id", unique: true, sparse: true });
+Room.ensureIndex({ fieldName: "_id", unique: true, sparse: true });
+Floor.ensureIndex({ fieldName: "_id", unique: true, sparse: true });
+Booking.ensureIndex({ fieldName: "_id", unique: true, sparse: true });
+
 const db = { Guest, Room, Floor, Booking };
 
 Vue.prototype.$db = db;
