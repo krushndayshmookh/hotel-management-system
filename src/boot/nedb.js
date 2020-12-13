@@ -1,22 +1,22 @@
 import Vue from "vue";
-import Datastore from "nedb";
+import { AsyncNedb } from "nedb-async";
 
-const Guest = new Datastore({
+const Guest = new AsyncNedb({
   filename: "guests",
   autoload: true
 });
 
-const Room = new Datastore({
+const Room = new AsyncNedb({
   filename: "rooms",
   autoload: true
 });
 
-const Floor = new Datastore({
+const Floor = new AsyncNedb({
   filename: "floors",
   autoload: true
 });
 
-const Booking = new Datastore({
+const Booking = new AsyncNedb({
   filename: "bookings",
   autoload: true
 });
