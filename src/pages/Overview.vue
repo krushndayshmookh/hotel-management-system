@@ -27,8 +27,16 @@
       </q-markup-table>
     </div>
 
-    <q-dialog v-model="showRoomOptions" persistent>
-      <RoomUpdateCard :room="selectedRoom" @done="fetchFloors" />
+    <q-dialog v-model="showRoomOptions">
+      <RoomUpdateCard
+        :room="selectedRoom"
+        @bill="displayBill"
+        @done="fetchFloors"
+      />
+    </q-dialog>
+
+    <q-dialog v-model="showBill">
+      <BillCard v-bind="billData" />
     </q-dialog>
   </q-page>
 </template>
@@ -37,12 +45,14 @@
 import moment from "moment-timezone";
 
 import RoomUpdateCard from "components/RoomUpdateCard";
+import BillCard from "components/BillCard";
 
 export default {
   name: "PageOverview",
 
   components: {
-    RoomUpdateCard
+    RoomUpdateCard,
+    BillCard
   },
 
   data() {
@@ -51,6 +61,9 @@ export default {
 
       showRoomOptions: false,
       selectedRoom: null,
+
+      showBill: false,
+      billData: null,
 
       floors: []
     };
@@ -91,6 +104,11 @@ export default {
       }
 
       this.floors = floors;
+    },
+
+    displayBill(data) {
+      this.billData = data;
+      this.showBill = true;
     }
   }
 };
