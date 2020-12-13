@@ -68,13 +68,13 @@ const bookings = [
   {
     guest: "c1",
     room: "g1",
-    checkIn: new moment.tz("Asia/Kolkata").subtract(3, "days").toDate(),
-    checkOut: new moment.tz("Asia/Kolkata").subtract(2, "days").toDate()
+    checkIn: new moment.tz("Asia/Kolkata").subtract(5, "days").toDate(),
+    checkOut: new moment.tz("Asia/Kolkata").subtract(3, "days").toDate(),
   },
   {
     guest: "c1",
     room: "11",
-    checkIn: new moment.tz("Asia/Kolkata").toDate()
+    checkIn: new moment.tz("Asia/Kolkata").toDate(),
   }
 ];
 
