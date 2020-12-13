@@ -280,12 +280,12 @@ export default {
       bookingCheckIn.validate();
       bookingRent.validate();
 
-      let hasErrors =
-        guestName.hasErrors ||
-        bookingCheckIn.hasErrors ||
-        bookingRent.hasErrors;
+      let hasError =
+        guestName.hasError ||
+        bookingCheckIn.hasError ||
+        bookingRent.hasError;
 
-      if (!hasErrors) {
+      if (!hasError) {
         this.$q.loading.show();
         let guest =
           (await this.$db.Guest.asyncFindOne({ name: this.guest.name })) ||
@@ -308,9 +308,9 @@ export default {
 
       bookingCheckOut.validate();
 
-      let hasErrors = bookingCheckOut.hasErrors;
+      let hasError = bookingCheckOut.hasError;
 
-      if (!hasErrors) {
+      if (!hasError) {
         this.$q.loading.show();
 
         await this.$db.Booking.asyncUpdate(
@@ -324,6 +324,7 @@ export default {
 
         this.guest = initialStates.guest;
         this.booking = initialStates.booking;
+        bookingCheckOut.resetValidation();
         this.roomState.occupied = false;
         this.$q.loading.hide();
       }
