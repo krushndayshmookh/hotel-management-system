@@ -28,7 +28,7 @@
     </div>
 
     <q-dialog v-model="showRoomOptions" persistent>
-      <RoomUpdateCard :room="selectedRoom" />
+      <RoomUpdateCard :room="selectedRoom" @done="fetchFloors" />
     </q-dialog>
   </q-page>
 </template>
