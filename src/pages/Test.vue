@@ -9,7 +9,7 @@ import moment from "moment-timezone";
 
 const floors = [
   {
-    _id: "0",
+    _id: "g",
     label: "Ground",
     order: 0
   },
@@ -27,18 +27,18 @@ const floors = [
 
 const rooms = [
   {
-    _id: "01",
+    _id: "g1",
     label: "G01",
     occupied: false,
     available: true,
-    floor: "0"
+    floor: "g"
   },
   {
-    _id: "02",
+    _id: "g2",
     label: "G02",
     occupied: false,
     available: false,
-    floor: "0"
+    floor: "g"
   },
   {
     _id: "11",
@@ -58,7 +58,7 @@ const rooms = [
 
 const guests = [
   {
-    _id: "g1",
+    _id: "c1",
     name: "Krushn",
     photo: "https://picsum.photos/seed/krushn/48/48"
   }
@@ -66,13 +66,13 @@ const guests = [
 
 const bookings = [
   {
-    guest: "g1",
-    room: "01",
+    guest: "c1",
+    room: "g1",
     checkIn: new moment.tz("Asia/Kolkata").subtract(3, "days").toDate(),
     checkOut: new moment.tz("Asia/Kolkata").subtract(2, "days").toDate()
   },
   {
-    guest: "g1",
+    guest: "c1",
     room: "11",
     checkIn: new moment.tz("Asia/Kolkata").toDate()
   }
