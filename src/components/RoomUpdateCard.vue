@@ -252,27 +252,10 @@ export default {
     }
   },
 
-  async created() {
+  created() {
     this.debouncedSaveRoom = _.debounce(this.saveRoom, 500);
 
-    this.roomState = await this.$db.Room.asyncFindOne({ _id: this.room._id });
-
-    if (this.roomState.occupied) {
-      this.booking = await this.$db.Booking.asyncFindOne({
-        room: this.room._id,
-        checkOut: {
-          $exists: false
-        }
-      });
-
-      this.booking.checkIn = moment(this.booking.checkIn).format(
-        "DD MMM YYYY HH:mm"
-      );
-
-      this.guest = await this.$db.Guest.asyncFindOne({
-        _id: this.booking.guest
-      });
-    }
+    this.fetchRoom();
   },
 
   destroyed() {
@@ -306,6 +289,27 @@ export default {
         this.roomState.occupied = false;
         // this.guest = null;
         this.deleteGuest(this.guest);
+      }
+    },
+
+    async fetchRoom() {
+      this.roomState = await this.$db.Room.asyncFindOne({ _id: this.room._id });
+
+      if (this.roomState.occupied) {
+        this.booking = await this.$db.Booking.asyncFindOne({
+          room: this.room._id,
+          checkOut: {
+            $exists: false
+          }
+        });
+
+        this.booking.checkIn = moment(this.booking.checkIn).format(
+          "DD MMM YYYY HH:mm"
+        );
+
+        this.guest = await this.$db.Guest.asyncFindOne({
+          _id: this.booking.guest
+        });
       }
     },
 
