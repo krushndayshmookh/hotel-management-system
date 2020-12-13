@@ -52,47 +52,7 @@ export default {
       showRoomOptions: false,
       selectedRoom: null,
 
-      floors: [
-        {
-          _id: "0",
-          label: "Ground",
-          order: 0,
-          rooms: [
-            {
-              _id: "G01",
-              label: "G01",
-              occupied: true,
-              ouccupant: {
-                _id: "krushn",
-                name: "Krushn",
-                checkIn: new moment().tz("Asia/Kolkata")
-              },
-              available: true
-            }
-          ]
-        },
-        {
-          _id: "1",
-          order: 1,
-          label: "First",
-          rooms: [
-            {
-              _id: "101",
-              label: "101",
-              occupied: false,
-              ouccupant: null,
-              available: true
-            },
-            {
-              _id: "102",
-              label: "102",
-              occupied: false,
-              ouccupant: null,
-              available: false
-            }
-          ]
-        }
-      ]
+      floors: []
     };
   },
 
@@ -108,6 +68,10 @@ export default {
     }
   },
 
+  created() {
+    this.fetchFloors();
+  },
+
   methods: {
     async viewRoom(room) {
       if (this.locked) {
@@ -116,6 +80,17 @@ export default {
 
       this.selectedRoom = room;
       this.showRoomOptions = true;
+    },
+
+    async fetchFloors() {
+      let floors = await this.$db.Floor.asyncFind({});
+      for (let i = 0; i < floors.length; i++) {
+        floors[i].rooms = await this.$db.Room.asyncFind({
+          floor: floors[i]._id
+        });
+      }
+
+      this.floors = floors;
     }
   }
 };
