@@ -198,6 +198,27 @@
 import moment from "moment-timezone";
 import _ from "lodash";
 
+const initialStates = {
+  room: {
+    _id: null,
+    label: null,
+    occupied: false,
+    available: false,
+    floor: null
+  },
+
+  guest: {
+    _id: null,
+    name: null
+  },
+
+  booking: {
+    _id: null,
+    checkIn: new moment().tz("Asia/Kolkata").format("DD MMM YYYY HH:mm"),
+    rentPerDay: 500
+  }
+};
+
 export default {
   name: "RoomUpdateCard",
 
@@ -221,24 +242,9 @@ export default {
       expandedValue: true,
       mountedWasRun: false,
 
-      roomState: {
-        _id: null,
-        label: null,
-        occupied: false,
-        available: false,
-        floor: null
-      },
-
-      guest: {
-        _id: null,
-        name: null
-      },
-
-      booking: {
-        _id: null,
-        checkIn: new moment().tz("Asia/Kolkata").format("DD MMM YYYY HH:mm"),
-        rentPerDay: 500
-      }
+      roomState: initialStates.room,
+      guest: initialStates.guest,
+      booking: initialStates.booking
     };
   },
 
@@ -269,7 +275,6 @@ export default {
 
   methods: {
     async checkIn() {
-      this.$q.loading.show();
       let { guestName, bookingCheckIn, bookingRent } = this.$refs;
       guestName.validate();
       bookingCheckIn.validate();
@@ -281,6 +286,7 @@ export default {
         bookingRent.hasErrors;
 
       if (!hasErrors) {
+        this.$q.loading.show();
         let guest =
           (await this.$db.Guest.asyncFindOne({ name: this.guest.name })) ||
           (await this.$db.Guest.asyncInsert({ name: this.guest.name }));
@@ -297,17 +303,29 @@ export default {
       }
     },
 
-    checkOut() {
-      let { guestCheckOut } = this.$refs;
+    async checkOut() {
+      let { bookingCheckOut } = this.$refs;
 
-      guestCheckOut.validate();
+      bookingCheckOut.validate();
 
-      let hasErrors = guestCheckOut.hasErrors;
+      let hasErrors = bookingCheckOut.hasErrors;
 
       if (!hasErrors) {
+        this.$q.loading.show();
+
+        await this.$db.Booking.asyncUpdate(
+          { _id: this.booking._id },
+          {
+            $set: {
+              checkOut: this.booking.checkOut
+            }
+          }
+        );
+
+        this.guest = initialStates.guest;
+        this.booking = initialStates.booking;
         this.roomState.occupied = false;
-        // this.guest = null;
-        this.deleteGuest(this.guest);
+        this.$q.loading.hide();
       }
     },
 
@@ -322,9 +340,9 @@ export default {
           }
         });
 
-        this.booking.checkIn = moment(this.booking.checkIn).format(
-          "DD MMM YYYY HH:mm"
-        );
+        this.booking.checkIn = moment(this.booking.checkIn)
+          .tz("Asia/Kolkata")
+          .format("DD MMM YYYY HH:mm");
 
         this.guest = await this.$db.Guest.asyncFindOne({
           _id: this.booking.guest
@@ -342,22 +360,6 @@ export default {
           console.log(docs);
         }
       );
-    },
-
-    async saveGuest(guest) {
-      delete guest._id;
-
-      this.$db.Guest.insert(guest, function(err, doc) {
-        if (err) console.error(err);
-        console.log(doc);
-      });
-    },
-
-    async deleteGuest(guest) {
-      this.$db.Guest.remove({ _id: guest._id }, {}, function(err, numRemoved) {
-        if (err) console.error(err);
-        console.log(numRemoved);
-      });
     }
   }
 };
