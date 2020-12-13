@@ -22,7 +22,7 @@
 
         <q-expansion-item
           v-model="expanded"
-          label="Occupancy"
+          label="Guest"
           :disable="!roomState.available"
         >
           <q-card>
@@ -41,7 +41,7 @@
                 <q-input
                   outlined
                   label="Check In"
-                  v-model="guest.checkIn"
+                  v-model="booking.checkIn"
                   ref="guestCheckIn"
                   :rules="[v => !!v]"
                   :disable="roomState.occupied"
@@ -54,8 +54,8 @@
                         transition-hide="scale"
                       >
                         <q-date
-                          v-model="guest.checkIn"
-                          mask="YYYY-MM-DD HH:mm"
+                          v-model="booking.checkIn"
+                          mask="DD MMM YYYY HH:mm"
                           today-btn
                         >
                           <div class="row items-center justify-end">
@@ -76,8 +76,8 @@
                         transition-hide="scale"
                       >
                         <q-time
-                          v-model="guest.checkIn"
-                          mask="YYYY-MM-DD HH:mm"
+                          v-model="booking.checkIn"
+                          mask="DD MMM YYYY HH:mm"
                           format24h
                           now-btn
                         >
@@ -98,7 +98,7 @@
                 <q-input
                   outlined
                   label="Check Out"
-                  v-model="guest.checkOut"
+                  v-model="booking.checkOut"
                   :disable="!roomState.occupied"
                   ref="guestCheckOut"
                   :rules="[v => !!v]"
@@ -111,8 +111,8 @@
                         transition-hide="scale"
                       >
                         <q-date
-                          v-model="guest.checkOut"
-                          mask="YYYY-MM-DD HH:mm"
+                          v-model="booking.checkOut"
+                          mask="DD MMM YYYY HH:mm"
                           today-btn
                         >
                           <div class="row items-center justify-end">
@@ -133,8 +133,8 @@
                         transition-hide="scale"
                       >
                         <q-time
-                          v-model="guest.checkOut"
-                          mask="YYYY-MM-DD HH:mm"
+                          v-model="booking.checkOut"
+                          mask="DD MMM YYYY HH:mm"
                           format24h
                           now-btn
                         >
@@ -155,7 +155,7 @@
                 <q-input
                   outlined
                   label="Rent Per Day"
-                  v-model="guest.rentPerDay"
+                  v-model="booking.rent"
                   ref="guestRent"
                   prefix="Rs"
                   :rules="[v => !!v]"
@@ -167,7 +167,7 @@
             <q-card-section>
               <div class="row">
                 <div class="col">
-                  <q-btn flat :disable="!roomState.occupied" label="Update" />
+                  <!-- <q-btn flat :disable="roomState.occupied" label="Update" /> -->
                 </div>
                 <div class="col text-right">
                   <q-btn
@@ -211,7 +211,7 @@ export default {
     roomState: {
       deep: true,
       handler(newRoomState) {
-        this.debouncedSaveRoom(newRoomState);
+        // this.debouncedSaveRoom(newRoomState);
       }
     }
   },
@@ -220,8 +220,24 @@ export default {
     return {
       expandedValue: true,
 
-      roomState: null,
-      guest: null
+      roomState: {
+        _id: null,
+        label: null,
+        occupied: false,
+        available: false,
+        floor: null
+      },
+
+      guest: {
+        _id: null,
+        name: null
+      },
+
+      booking: {
+        _id: null,
+        checkIn: new moment().tz("Asia/Kolkata").format("DD MMM YYYY HH:mm"),
+        rentPerDay: 500
+      }
     };
   },
 
@@ -236,21 +252,27 @@ export default {
     }
   },
 
-  created() {
+  async created() {
     this.debouncedSaveRoom = _.debounce(this.saveRoom, 500);
 
-    const { guest, ...roomState } = this.room;
+    this.roomState = await this.$db.Room.asyncFindOne({ _id: this.room._id });
 
-    this.roomState = roomState;
+    if (this.roomState.occupied) {
+      this.booking = await this.$db.Booking.asyncFindOne({
+        room: this.room._id,
+        checkOut: {
+          $exists: false
+        }
+      });
 
-    this.guest = guest
-      ? guest
-      : {
-          _id: null,
-          name: null,
-          checkIn: new moment().tz("Asia/Kolkata").format("YYYY-MM-DD HH:mm"),
-          rentPerDay: 500
-        };
+      this.booking.checkIn = moment(this.booking.checkIn).format(
+        "DD MMM YYYY HH:mm"
+      );
+
+      this.guest = await this.$db.Guest.asyncFindOne({
+        _id: this.booking.guest
+      });
+    }
   },
 
   destroyed() {
@@ -265,9 +287,7 @@ export default {
       guestRent.validate();
 
       let hasErrors =
-        guestName.hasErrors ||
-        guestCheckIn.hasErrors ||
-        guestRent.hasErrors;
+        guestName.hasErrors || guestCheckIn.hasErrors || guestRent.hasErrors;
 
       if (!hasErrors) {
         this.saveGuest(this.guest);
@@ -311,10 +331,7 @@ export default {
     },
 
     async deleteGuest(guest) {
-      this.$db.Guest.remove({ _id: guest._id }, {}, function(
-        err,
-        numRemoved
-      ) {
+      this.$db.Guest.remove({ _id: guest._id }, {}, function(err, numRemoved) {
         if (err) console.error(err);
         console.log(numRemoved);
       });
