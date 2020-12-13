@@ -30,9 +30,9 @@
               <div class="q-gutter-sm">
                 <q-input
                   outlined
-                  label="Occupant name"
-                  v-model="occupant.name"
-                  ref="occupantName"
+                  label="Guest name"
+                  v-model="guest.name"
+                  ref="guestName"
                   :rules="[v => !!v]"
                   :disable="roomState.occupied"
                   lazy-rules
@@ -41,8 +41,8 @@
                 <q-input
                   outlined
                   label="Check In"
-                  v-model="occupant.checkIn"
-                  ref="occupantCheckIn"
+                  v-model="guest.checkIn"
+                  ref="guestCheckIn"
                   :rules="[v => !!v]"
                   :disable="roomState.occupied"
                   lazy-rules
@@ -54,7 +54,7 @@
                         transition-hide="scale"
                       >
                         <q-date
-                          v-model="occupant.checkIn"
+                          v-model="guest.checkIn"
                           mask="YYYY-MM-DD HH:mm"
                           today-btn
                         >
@@ -76,7 +76,7 @@
                         transition-hide="scale"
                       >
                         <q-time
-                          v-model="occupant.checkIn"
+                          v-model="guest.checkIn"
                           mask="YYYY-MM-DD HH:mm"
                           format24h
                           now-btn
@@ -98,9 +98,9 @@
                 <q-input
                   outlined
                   label="Check Out"
-                  v-model="occupant.checkOut"
+                  v-model="guest.checkOut"
                   :disable="!roomState.occupied"
-                  ref="occupantCheckOut"
+                  ref="guestCheckOut"
                   :rules="[v => !!v]"
                   lazy-rules
                 >
@@ -111,7 +111,7 @@
                         transition-hide="scale"
                       >
                         <q-date
-                          v-model="occupant.checkOut"
+                          v-model="guest.checkOut"
                           mask="YYYY-MM-DD HH:mm"
                           today-btn
                         >
@@ -133,7 +133,7 @@
                         transition-hide="scale"
                       >
                         <q-time
-                          v-model="occupant.checkOut"
+                          v-model="guest.checkOut"
                           mask="YYYY-MM-DD HH:mm"
                           format24h
                           now-btn
@@ -155,8 +155,8 @@
                 <q-input
                   outlined
                   label="Rent Per Day"
-                  v-model="occupant.rentPerDay"
-                  ref="occupantRent"
+                  v-model="guest.rentPerDay"
+                  ref="guestRent"
                   prefix="Rs"
                   :rules="[v => !!v]"
                   :disable="roomState.occupied"
@@ -221,7 +221,7 @@ export default {
       expandedValue: true,
 
       roomState: null,
-      occupant: null
+      guest: null
     };
   },
 
@@ -239,12 +239,12 @@ export default {
   created() {
     this.debouncedSaveRoom = _.debounce(this.saveRoom, 500);
 
-    const { occupant, ...roomState } = this.room;
+    const { guest, ...roomState } = this.room;
 
     this.roomState = roomState;
 
-    this.occupant = occupant
-      ? occupant
+    this.guest = guest
+      ? guest
       : {
           _id: null,
           name: null,
@@ -259,33 +259,33 @@ export default {
 
   methods: {
     checkIn() {
-      let { occupantName, occupantCheckIn, occupantRent } = this.$refs;
-      occupantName.validate();
-      occupantCheckIn.validate();
-      occupantRent.validate();
+      let { guestName, guestCheckIn, guestRent } = this.$refs;
+      guestName.validate();
+      guestCheckIn.validate();
+      guestRent.validate();
 
       let hasErrors =
-        occupantName.hasErrors ||
-        occupantCheckIn.hasErrors ||
-        occupantRent.hasErrors;
+        guestName.hasErrors ||
+        guestCheckIn.hasErrors ||
+        guestRent.hasErrors;
 
       if (!hasErrors) {
-        this.saveOccupant(this.occupant);
+        this.saveGuest(this.guest);
         this.roomState.occupied = true;
       }
     },
 
     checkOut() {
-      let { occupantCheckOut } = this.$refs;
+      let { guestCheckOut } = this.$refs;
 
-      occupantCheckOut.validate();
+      guestCheckOut.validate();
 
-      let hasErrors = occupantCheckOut.hasErrors;
+      let hasErrors = guestCheckOut.hasErrors;
 
       if (!hasErrors) {
         this.roomState.occupied = false;
-        // this.occupant = null;
-        this.deleteOccupant(this.occupant);
+        // this.guest = null;
+        this.deleteGuest(this.guest);
       }
     },
 
@@ -301,17 +301,17 @@ export default {
       );
     },
 
-    async saveOccupant(occupant) {
-      delete occupant._id;
+    async saveGuest(guest) {
+      delete guest._id;
 
-      this.$db.Occupant.insert(occupant, function(err, doc) {
+      this.$db.Guest.insert(guest, function(err, doc) {
         if (err) console.error(err);
         console.log(doc);
       });
     },
 
-    async deleteOccupant(occupant) {
-      this.$db.Occupant.remove({ _id: occupant._id }, {}, function(
+    async deleteGuest(guest) {
+      this.$db.Guest.remove({ _id: guest._id }, {}, function(
         err,
         numRemoved
       ) {

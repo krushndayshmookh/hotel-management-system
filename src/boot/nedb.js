@@ -2,8 +2,8 @@ import Vue from "vue";
 import Datastore from "nedb";
 import path from "path";
 
-const Occupant = new Datastore({
-  filename: "occupants",
+const Guest = new Datastore({
+  filename: "guests",
   autoload: true
 });
 
@@ -17,6 +17,6 @@ const Floor = new Datastore({
   autoload: true
 });
 
-const db = { Occupant, Room, Floor };
+const db = { Guest, Room, Floor };
 
 Vue.prototype.$db = db;
