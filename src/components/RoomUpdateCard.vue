@@ -42,7 +42,7 @@
                   outlined
                   label="Check In"
                   v-model="booking.checkIn"
-                  ref="guestCheckIn"
+                  ref="bookingCheckIn"
                   :rules="[v => !!v]"
                   :disable="roomState.occupied"
                   lazy-rules
@@ -100,7 +100,7 @@
                   label="Check Out"
                   v-model="booking.checkOut"
                   :disable="!roomState.occupied"
-                  ref="guestCheckOut"
+                  ref="bookingCheckOut"
                   :rules="[v => !!v]"
                   lazy-rules
                 >
@@ -156,7 +156,7 @@
                   outlined
                   label="Rent Per Day"
                   v-model="booking.rent"
-                  ref="guestRent"
+                  ref="bookingRent"
                   prefix="Rs"
                   :rules="[v => !!v]"
                   :disable="roomState.occupied"
@@ -268,18 +268,32 @@ export default {
   },
 
   methods: {
-    checkIn() {
-      let { guestName, guestCheckIn, guestRent } = this.$refs;
+    async checkIn() {
+      this.$q.loading.show();
+      let { guestName, bookingCheckIn, bookingRent } = this.$refs;
       guestName.validate();
-      guestCheckIn.validate();
-      guestRent.validate();
+      bookingCheckIn.validate();
+      bookingRent.validate();
 
       let hasErrors =
-        guestName.hasErrors || guestCheckIn.hasErrors || guestRent.hasErrors;
+        guestName.hasErrors ||
+        bookingCheckIn.hasErrors ||
+        bookingRent.hasErrors;
 
       if (!hasErrors) {
-        this.saveGuest(this.guest);
+        let guest =
+          (await this.$db.Guest.asyncFindOne({ name: this.guest.name })) ||
+          (await this.$db.Guest.asyncInsert({ name: this.guest.name }));
+
+        await this.$db.Booking.asyncInsert({
+          room: this.room._id,
+          guest: guest._id,
+          checkIn: moment(this.booking.checkIn).valueOf(),
+          rent: this.booking.rent
+        });
+
         this.roomState.occupied = true;
+        this.$q.loading.hide();
       }
     },
 
