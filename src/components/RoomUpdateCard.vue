@@ -299,6 +299,11 @@ export default {
         });
 
         this.roomState.occupied = true;
+
+        this.$q.notify({
+          type: "positive",
+          message: "Checked in."
+        });
         this.$q.loading.hide();
       }
     },
@@ -326,6 +331,11 @@ export default {
         this.booking = initialStates.booking;
         bookingCheckOut.resetValidation();
         this.roomState.occupied = false;
+
+        this.$q.notify({
+          type: "positive",
+          message: "Checked out."
+        });
         this.$q.loading.hide();
       }
     },
