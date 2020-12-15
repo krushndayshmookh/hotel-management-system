@@ -27,7 +27,7 @@
         </div>
       </q-toolbar>
 
-      <q-tabs align="left">
+      <q-tabs align="left" v-if="!!token">
         <q-route-tab to="/overview" label="Overview" />
         <q-route-tab to="/statistics" label="Statistics" />
       </q-tabs>
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       // locked: false,
-      connected: false
+      // connected: false
     };
   },
 
@@ -60,7 +60,23 @@ export default {
       set(value) {
         return this.$store.dispatch("general/setLock", value);
       }
+    },
+
+    connected() {
+      return navigator.onLine;
+    },
+
+    token() {
+      return this.$store.getters["auth/token"];
+    },
+
+    user() {
+      return this.$store.getters["auth/user"];
     }
+  },
+
+  async created() {
+    await this.checkLogin();
   },
 
   methods: {
@@ -72,8 +88,24 @@ export default {
       this.connected = !this.connected;
     },
 
+    async checkLogin() {
+      if (!this.token) {
+        this.logout();
+      }
+
+      if (this.connected)
+        try {
+          this.$store.dispatch("auth/setHeaders");
+          await this.$axios.get("/auth/login/status");
+        } catch (error) {
+          // console.error(error);
+          this.logout();
+        }
+    },
+
     logout() {
-      this.$router.push("/login");
+      this.$store.dispatch("auth/logout");
+      if (!this.$route.path.includes("/login")) this.$router.replace("/login");
     }
   }
 };
