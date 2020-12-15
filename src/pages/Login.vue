@@ -11,11 +11,11 @@
         <form @submit.prevent.stop="login" class="q-gutter-sm">
           <q-input
             color="primary"
-            v-model="user.username"
-            label="Username"
-            type="username"
-            ref="input_username"
-            :rules="[val => !!val || 'Username is required']"
+            v-model="user.phone"
+            label="Phone"
+            type="phone"
+            ref="input_phone"
+            :rules="[val => !!val || 'Phone is required']"
             lazy-rules
           />
           <q-input
@@ -48,7 +48,7 @@ export default {
   data() {
     return {
       user: {
-        username: "",
+        phone: "",
         password: ""
       }
     };
@@ -56,7 +56,27 @@ export default {
 
   methods: {
     login() {
-      this.$store.dispatch("auth/login", this.user);
+      this.$axios
+        .post("/auth/login", this.user)
+        .then(response => {
+          if (response.data.status) {
+            this.$store.dispatch("auth/login", response.data);
+            this.$router.push("/overview");
+          } else {
+            // wrong password
+            this.$q.notify({
+              type: "negative",
+              message: "Invalid credentials."
+            });
+          }
+        })
+        .catch(err => {
+          console.error(err);
+          this.$q.notify({
+            type: "negative",
+            message: "Error occured."
+          });
+        });
     }
   }
 };
