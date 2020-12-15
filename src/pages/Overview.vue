@@ -88,12 +88,14 @@ export default {
 
   methods: {
     async viewRoom(room) {
-      if (this.locked) {
-        return this.$store.dispatch("general/setLock", false);
-      }
+      if (this.user.type == "manager") {
+        if (this.locked) {
+          return this.$store.dispatch("general/setLock", false);
+        }
 
-      this.selectedRoom = room;
-      this.showRoomOptions = true;
+        this.selectedRoom = room;
+        this.showRoomOptions = true;
+      }
     },
 
     async fetchFloors() {
