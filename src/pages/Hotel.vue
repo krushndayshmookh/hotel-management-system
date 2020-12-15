@@ -58,13 +58,20 @@
         <q-card-section>
           <div class="text-h6">
             Rooms &amp; Floors
-            <q-btn class="float-right q-ml-sm" color="primary">Add Room</q-btn>
+            <q-btn
+              class="float-right q-ml-sm"
+              color="primary"
+              @click="displayNewRoomForm"
+            >
+              Add Room
+            </q-btn>
             <q-btn
               class="float-right"
               color="primary"
               @click="displayNewFloorForm"
-              >Add Floor</q-btn
             >
+              Add Floor
+            </q-btn>
           </div>
         </q-card-section>
         <q-separator></q-separator>
@@ -205,7 +212,7 @@
             v-model="newFloor.order"
             ref="floorOrder"
             type="number"
-            :rules="[v => v>=0]"
+            :rules="[v => v >= 0]"
             lazy-rules
             hide-bottom-space
           />
@@ -215,6 +222,49 @@
 
         <q-card-actions align="right">
           <q-btn flat color="primary" @click="saveFloor">Save</q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <q-dialog v-model="showAddRoomForm">
+      <q-card style="min-width: 500px">
+        <q-card-section class="row items-center">
+          <div class="text-h6 items-center">Add Room</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="column q-col-gutter-md">
+          <q-input
+            outlined
+            label="Label"
+            v-model="newRoom.label"
+            ref="roomLabel"
+            :rules="[v => !!v]"
+            lazy-rules
+            hide-bottom-space
+          />
+
+          <q-select
+            outlined
+            label="Floor"
+            v-model="newRoom.floor"
+            ref="roomFloor"
+            :options="floorOptions"
+            map-options
+            emit-value
+            :rules="[v => !!v]"
+            lazy-rules
+            hide-bottom-space
+          />
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn flat color="primary" @click="saveRoom">Save</q-btn>
         </q-card-actions>
       </q-card>
     </q-dialog>
@@ -240,6 +290,12 @@ export default {
       newFloor: {
         label: null,
         order: 0
+      },
+
+      showAddRoomForm: false,
+      newRoom: {
+        label: null,
+        floor: null
       },
 
       hotel: null,
@@ -377,6 +433,38 @@ export default {
           .then(response => {
             this.showAddFloorForm = false;
             this.fetchFloors();
+          })
+          .catch(err => {
+            console.error(err);
+            this.$q.notify({
+              type: "negative",
+              message: "Error occured."
+            });
+          })
+          .finally(() => {
+            this.$q.loading.hide();
+          });
+      }
+    },
+
+    displayNewRoomForm() {
+      this.showAddRoomForm = true;
+    },
+
+    saveRoom() {
+      let { roomLabel, roomFloor } = this.$refs;
+      roomLabel.validate();
+      roomFloor.validate();
+
+      let hasError = roomLabel.hasError || roomFloor.hasError;
+
+      if (!hasError) {
+        this.$q.loading.show();
+        this.$axios
+          .post("/hotels/" + this.hotelid + "/rooms", this.newRoom)
+          .then(response => {
+            this.showAddRoomForm = false;
+            this.fetchRooms();
           })
           .catch(err => {
             console.error(err);
