@@ -61,7 +61,11 @@ export default {
         .then(response => {
           if (response.data.status) {
             this.$store.dispatch("auth/login", response.data);
-            this.$router.push("/overview");
+
+            const userType = response.data.user.type;
+            if (userType == "admin") this.$router.push("/hotels");
+            if (userType == "manager" || userType == "viewer")
+              this.$router.push("/overview");
           } else {
             // wrong password
             this.$q.notify({
