@@ -44,15 +44,12 @@
 <script>
 import moment from "moment-timezone";
 
-import RoomUpdateCard from "components/RoomUpdateCard";
-import BillCard from "components/BillCard";
-
 export default {
   name: "PageOverview",
 
   components: {
-    RoomUpdateCard,
-    BillCard
+    RoomUpdateCard: () => import("components/RoomUpdateCard"),
+    BillCard: () => import("components/BillCard")
   },
 
   data() {
@@ -78,6 +75,10 @@ export default {
       get() {
         return this.$store.getters["general/locked"];
       }
+    },
+
+    user() {
+      return this.$store.getters["auth/user"];
     }
   },
 
