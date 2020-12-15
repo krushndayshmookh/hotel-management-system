@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 
+import auth from './auth'
 import general from './general'
 
 Vue.use(Vuex)
@@ -17,6 +18,7 @@ Vue.use(Vuex)
 export default function (/* { ssrContext } */) {
   const Store = new Vuex.Store({
     modules: {
+      auth,
       general
     },
 
