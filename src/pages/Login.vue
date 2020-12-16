@@ -55,17 +55,19 @@ export default {
   },
 
   methods: {
-    login() {
+    async login() {
       this.$axios
         .post("/auth/login", this.user)
-        .then(response => {
+        .then(async response => {
           if (response.data.status) {
             this.$store.dispatch("auth/login", response.data);
 
             const userType = response.data.user.type;
             if (userType == "admin") this.$router.push("/hotels");
-            if (userType == "manager" || userType == "viewer")
+            if (userType == "manager" || userType == "viewer") {
+              await this.fetchHotelDetails(userType);
               this.$router.push("/overview");
+            }
           } else {
             // wrong password
             this.$q.notify({
@@ -80,6 +82,14 @@ export default {
             type: "negative",
             message: "Error occured."
           });
+        });
+    },
+
+    async fetchHotelDetails(userType) {
+      await this.$axios
+        .get("/hotels/details?userType=" + userType)
+        .then(async response => {
+          await this.$db.resetWith(response.data);
         });
     }
   }
