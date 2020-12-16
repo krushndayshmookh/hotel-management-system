@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedState from "vuex-persistedstate";
 
 import auth from './auth'
 import general from './general'
@@ -21,6 +22,8 @@ export default function (/* { ssrContext } */) {
       auth,
       general
     },
+
+    plugins: [createPersistedState()],
 
     // enable strict mode (adds overhead!)
     // for dev mode only
