@@ -9,8 +9,15 @@
     <q-separator />
 
     <q-card-section>
+      <div class="text-body1">
+        Duration:
+        <span class="float-right text-weight-bold">
+          {{ duration }} day{{ duration == 1 ? "" : "s" }}
+        </span>
+      </div>
       <div class="text-h5">
-        Amount to collect: <span class="float-right text-weight-bold">Rs {{ billAmount }}</span>
+        Amount to collect:
+        <span class="float-right text-weight-bold">Rs {{ billAmount }}</span>
       </div>
     </q-card-section>
   </q-card>
@@ -25,7 +32,7 @@ export default {
   props: ["checkIn", "checkOut", "rent"],
 
   computed: {
-    billAmount() {
+    duration() {
       let start = new moment(this.checkIn).tz("Asia/Kolkata");
       if (start.hours() < 12) {
         start.subtract(1, "days");
@@ -38,9 +45,11 @@ export default {
         end.hours(12).minutes(0);
       }
 
-      let duration = moment.duration(end.diff(start)).asDays();
+      return Math.ceil(moment.duration(end.diff(start)).asDays());
+    },
 
-      return this.rent * duration;
+    billAmount() {
+      return this.rent * this.duration;
     }
   }
 };
