@@ -1,6 +1,5 @@
 import { Dialog, Notify } from "quasar";
 
-const PINCODE = "1234";
 const TIMEOUT = 10 * 60 * 1000; /* m * s * ms */
 
 export function setLock(context, payload) {
@@ -22,7 +21,7 @@ function verifyCode(context) {
     cancel: true,
     persistent: true
   }).onOk(data => {
-    if (data == PINCODE) {
+    if (data == context.rootState.auth.user.pin) {
       context.commit("setLock", false);
 
       setTimeout(() => {
