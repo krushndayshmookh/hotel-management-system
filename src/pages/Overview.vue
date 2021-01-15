@@ -230,7 +230,7 @@ export default {
           message: "Would you like to check out?",
           cancel: true,
           ok: {
-            label: "Checkout"
+            label: "Check out"
           }
         })
         .onOk(() => {
