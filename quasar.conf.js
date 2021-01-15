@@ -178,7 +178,16 @@ module.exports = function(/* ctx */) {
       builder: {
         // https://www.electron.build/configuration/configuration
 
-        appId: 'hotel-management-system'
+        appId: "dev.rootkings.hms",
+        productName: "Root HMS",
+
+        win: {
+          target: ["portable"]
+        },
+
+        linux: {
+          target: ["AppImage"]
+        }
       },
 
       // More info: https://quasar.dev/quasar-cli/developing-electron-apps/node-integration
