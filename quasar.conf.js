@@ -111,8 +111,8 @@ module.exports = function(/* ctx */) {
       workboxPluginMode: "GenerateSW", // 'GenerateSW' or 'InjectManifest'
       workboxOptions: {}, // only for GenerateSW
       manifest: {
-        name: `Bellboy`,
-        short_name: `Bellboy`,
+        name: `Root HMS`,
+        short_name: `Root HMS`,
         description: `A cross platform hotel management app`,
         display: "standalone",
         orientation: "portrait",
