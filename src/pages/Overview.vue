@@ -41,18 +41,24 @@
     <q-dialog v-model="showBill">
       <BillCard v-bind="billData" />
     </q-dialog>
+
+    <q-dialog v-model="captureDialog">
+      <ImageCapture @capture="handleCapture" />
+    </q-dialog>
   </q-page>
 </template>
 
 <script>
 import moment from "moment-timezone";
+import fs from "fs-extra";
 
 export default {
   name: "PageOverview",
 
   components: {
     RoomUpdateCard: () => import("components/RoomUpdateCard"),
-    BillCard: () => import("components/BillCard")
+    BillCard: () => import("components/BillCard"),
+    ImageCapture: () => import("components/ImageCapture")
   },
 
   data() {
@@ -64,6 +70,9 @@ export default {
 
       roomState: null,
       booking: null,
+
+      captureDialog: false,
+      aadharFilePath: null,
 
       showBill: false,
       billData: null,
@@ -93,6 +102,28 @@ export default {
   },
 
   methods: {
+    async handleCapture(blob) {
+      let now = new moment.tz("Asia/Kolkata");
+
+      let directory =
+        this.$q.electron.remote.app.getPath("userData") +
+        "/Root-HMS/images/aadhar/" +
+        now.format("YYYY-MM-DD");
+
+      let fileName =
+        now.format("HH-mm-ss") + "_" + this.selectedRoom._id + ".png";
+
+      this.aadharFilePath = directory + "/" + fileName;
+
+      let fileData = new Int8Array(await blob.arrayBuffer());
+
+      fs.outputFileSync(this.aadharFilePath, fileData);
+
+      this.captureDialog = false;
+
+      this.doCheckIn();
+    },
+
     async viewRoom(room) {
       if (this.user.type == "manager") {
         if (this.locked) {
@@ -149,7 +180,47 @@ export default {
         .onOk(() => {
           this.startCheckInFlow();
         });
+    },
+
+    startCheckInFlow() {
+      this.captureDialog = true;
+    },
+
+    async doCheckIn() {
+      try {
+        let guest = await this.$db.Guest.asyncInsert({
+          name: "Unknown",
+          aadhar: this.aadharFilePath
+        });
+
+        await this.$db.Booking.asyncInsert({
+          room: this.selectedRoom._id,
+          guest: guest._id,
+          checkIn: new Date(),
+          rent: 0,
+          aadhar: this.aadharFilePath
+        });
+
+        await this.$db.Room.asyncUpdate(
+          {
+            _id: this.selectedRoom._id
+          },
+          {
+            $set: {
+              occupied: true
+            }
+          }
+        );
+      } catch (err) {
+        console.error(err);
       }
+
+      this.fetchFloors();
+
+      this.$q.notify({
+        type: "positive",
+        message: "Checked in."
+      });
     },
 
     checkOut() {
@@ -159,7 +230,7 @@ export default {
           message: "Would you like to check out?",
           cancel: true,
           ok: {
-            label: "Checkout"
+            label: "Check out"
           }
         })
         .onOk(() => {
