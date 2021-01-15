@@ -50,6 +50,7 @@
 
 <script>
 import moment from "moment-timezone";
+import fs from "fs-extra";
 
 export default {
   name: "PageOverview",
@@ -71,6 +72,8 @@ export default {
       booking: null,
 
       captureDialog: false,
+      aadharFilePath: null,
+
       showBill: false,
       billData: null,
 
@@ -177,7 +180,47 @@ export default {
         .onOk(() => {
           this.startCheckInFlow();
         });
+    },
+
+    startCheckInFlow() {
+      this.captureDialog = true;
+    },
+
+    async doCheckIn() {
+      try {
+        let guest = await this.$db.Guest.asyncInsert({
+          name: "Unknown",
+          aadhar: this.aadharFilePath
+        });
+
+        await this.$db.Booking.asyncInsert({
+          room: this.selectedRoom._id,
+          guest: guest._id,
+          checkIn: new Date(),
+          rent: 0,
+          aadhar: this.aadharFilePath
+        });
+
+        await this.$db.Room.asyncUpdate(
+          {
+            _id: this.selectedRoom._id
+          },
+          {
+            $set: {
+              occupied: true
+            }
+          }
+        );
+      } catch (err) {
+        console.error(err);
       }
+
+      this.fetchFloors();
+
+      this.$q.notify({
+        type: "positive",
+        message: "Checked in."
+      });
     },
 
     checkOut() {
