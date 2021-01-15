@@ -41,6 +41,10 @@
     <q-dialog v-model="showBill">
       <BillCard v-bind="billData" />
     </q-dialog>
+
+    <q-dialog v-model="captureDialog">
+      <ImageCapture @capture="handleCapture" />
+    </q-dialog>
   </q-page>
 </template>
 
@@ -52,7 +56,8 @@ export default {
 
   components: {
     RoomUpdateCard: () => import("components/RoomUpdateCard"),
-    BillCard: () => import("components/BillCard")
+    BillCard: () => import("components/BillCard"),
+    ImageCapture: () => import("components/ImageCapture")
   },
 
   data() {
@@ -65,6 +70,7 @@ export default {
       roomState: null,
       booking: null,
 
+      captureDialog: false,
       showBill: false,
       billData: null,
 
