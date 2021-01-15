@@ -3,7 +3,7 @@
     <q-header elevated>
       <q-toolbar>
         <q-toolbar-title>
-          Bellboy
+          HMS
         </q-toolbar-title>
 
         <div class="q-gutter-md">
