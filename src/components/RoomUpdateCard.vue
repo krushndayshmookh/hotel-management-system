@@ -239,7 +239,7 @@ export default {
 
   data() {
     return {
-      expandedValue: true,
+      expandedValue: false,
       mountedWasRun: false,
 
       roomState: { ...initialStates.room },
