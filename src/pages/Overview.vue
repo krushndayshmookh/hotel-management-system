@@ -22,6 +22,7 @@
                   !room.available ? 'grey' : room.occupied ? 'red' : 'green'
                 "
                 @click="toggleOccupiedStatus(room)"
+                @contextmenu.prevent="viewRoom(room)"
               />
             </td>
           </tr>
