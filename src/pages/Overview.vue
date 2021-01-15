@@ -99,6 +99,28 @@ export default {
   },
 
   methods: {
+    async handleCapture(blob) {
+      let now = new moment.tz("Asia/Kolkata");
+
+      let directory =
+        this.$q.electron.remote.app.getPath("userData") +
+        "/Root-HMS/images/aadhar/" +
+        now.format("YYYY-MM-DD");
+
+      let fileName =
+        now.format("HH-mm-ss") + "_" + this.selectedRoom._id + ".png";
+
+      this.aadharFilePath = directory + "/" + fileName;
+
+      let fileData = new Int8Array(await blob.arrayBuffer());
+
+      fs.outputFileSync(this.aadharFilePath, fileData);
+
+      this.captureDialog = false;
+
+      this.doCheckIn();
+    },
+
     async viewRoom(room) {
       if (this.user.type == "manager") {
         if (this.locked) {
