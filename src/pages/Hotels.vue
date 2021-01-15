@@ -69,6 +69,16 @@
             lazy-rules
             hide-bottom-space
           />
+
+          <q-input
+            outlined
+            label="Number of Rooms"
+            v-model="newHotel.rooms"
+            ref="hotelRooms"
+            :rules="[v => !!v]"
+            lazy-rules
+            hide-bottom-space
+          />
         </q-card-section>
 
         <q-separator />
@@ -88,7 +98,8 @@ export default {
       showAddForm: false,
       newHotel: {
         name: null,
-        owner: null
+        owner: null,
+        rooms: null
       },
 
       hotels: []
@@ -124,11 +135,13 @@ export default {
     },
 
     saveHotel() {
-      let { hotelName, hotelOwner } = this.$refs;
+      let { hotelName, hotelOwner, hotelRooms } = this.$refs;
       hotelName.validate();
       hotelOwner.validate();
+      hotelRooms.validate();
 
-      let hasError = hotelName.hasError || hotelOwner.hasError;
+      let hasError =
+        hotelName.hasError || hotelOwner.hasError || hotelRooms.hasError;
 
       if (!hasError) {
         this.$q.loading.show();
