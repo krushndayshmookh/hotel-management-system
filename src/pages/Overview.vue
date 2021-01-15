@@ -131,7 +131,24 @@ export default {
         if (this.selectedRoom.occupied) {
           this.checkOut();
         } else {
+          this.checkIn();
         }
+      }
+    },
+
+    async checkIn() {
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Would you like to check in?",
+          cancel: true,
+          ok: {
+            label: "Check in"
+          }
+        })
+        .onOk(() => {
+          this.startCheckInFlow();
+        });
       }
     },
 
