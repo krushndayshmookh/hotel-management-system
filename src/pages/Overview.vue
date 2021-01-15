@@ -12,6 +12,8 @@
             <td class="q-gutter-sm">
               <q-btn
                 v-for="room in floor.rooms"
+                size="xl"
+                class="q-px-sm"
                 :key="room._id"
                 :label="room.label"
                 :flat="!room.occupied && !room.available"
