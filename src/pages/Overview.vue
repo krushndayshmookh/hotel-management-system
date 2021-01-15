@@ -8,7 +8,7 @@
       <q-markup-table flat>
         <tbody>
           <tr v-for="floor in reversedFloors" :key="floor._id">
-            <!-- <td>{{ floor.label }}</td> -->
+            <td v-if="reversedFloors.length > 1">{{ floor.label }}</td>
             <td class="q-gutter-sm">
               <q-btn
                 v-for="room in floor.rooms"
