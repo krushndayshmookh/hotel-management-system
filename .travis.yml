@@ -33,8 +33,7 @@ branches:
 deploy:
   provider: releases
   api_key: "72aa0539c6553adcf3f7876370a320a836282611"
-  file:
-    - "/home/travis/build/root-kings/hotel-management-system/dist/electron/Packaged/Root HMS 0.0.1.exe"
-    - "/home/travis/build/root-kings/project/dist/electron/Packaged/Root HMS 0.0.1.exe"
+  file_glob: true
+  file: "/home/travis/build/root-kings/hotel-management-system/**/dist/electron/Packaged/Root HMS 0.0.1.exe"
   skip_cleanup: true
   draft: true
