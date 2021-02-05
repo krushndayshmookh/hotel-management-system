@@ -39,4 +39,3 @@ deploy:
   file_glob: true
   file: "/home/travis/build/root-kings/hotel-management-system/**/dist/electron/Packaged/Root HMS 0.0.1.exe"
   skip_cleanup: true
-  draft: true
