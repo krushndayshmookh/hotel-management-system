@@ -181,9 +181,9 @@ module.exports = function(/* ctx */) {
         appId: "dev.rootkings.hms",
         productName: "Root HMS",
 
-        // win: {
-        //   target: ["portable"]
-        // },
+        win: {
+          target: ["portable"]
+        },
 
         linux: {
           target: ["AppImage"]
