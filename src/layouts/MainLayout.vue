@@ -118,7 +118,7 @@ export default {
     },
 
     tabs() {
-      return TABS[this.user.type];
+      return TABS[this.user.type] || [];
     }
   },
 
@@ -144,6 +144,7 @@ export default {
         try {
           this.$store.dispatch("auth/setHeaders");
           await this.$axios.get("/auth/login/status");
+          this.$router.push("/overview");
         } catch (error) {
           // console.error(error);
           this.logout();

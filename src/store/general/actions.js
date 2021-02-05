@@ -1,4 +1,5 @@
 import { Dialog, Notify } from "quasar";
+import axios from "axios";
 
 const TIMEOUT = 10 * 60 * 1000; /* m * s * ms */
 
@@ -34,4 +35,18 @@ function verifyCode(context) {
       });
     }
   });
+}
+
+export function fetchHotel({ commit }, hotelid) {
+  axios.get("/hotels/" + hotelid).then(async response => {
+    commit("setHotel", response.data);
+  });
+}
+
+export function setOccupied({ commit }, payload) {
+  commit("setOccupied", payload);
+}
+
+export function setRoom({ commit }, payload) {
+  commit("setRoom", payload);
 }

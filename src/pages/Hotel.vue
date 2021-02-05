@@ -8,105 +8,115 @@
         </q-card-section>
       </q-card>
 
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">
-            Users
-            <q-btn
-              class="float-right"
-              color="primary"
-              @click="displayNewUserForm"
-              >Add User</q-btn
-            >
+      <div>
+        <div class="row q-col-gutter-md">
+          <div class="col-8">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">
+                  Users
+                  <q-btn
+                    class="float-right"
+                    color="primary"
+                    @click="displayNewUserForm"
+                    >Add User</q-btn
+                  >
+                </div>
+              </q-card-section>
+              <q-separator></q-separator>
+              <q-card-section horizontal class="q-pa-none">
+                <q-card-section class="q-pa-none col">
+                  <q-list>
+                    <q-item-label header>Managers</q-item-label>
+                    <q-item
+                      v-for="manager in hotel.managers"
+                      :key="manager._id"
+                    >
+                      <q-item-section>
+                        <q-item-label>{{ manager.name }}</q-item-label>
+                      </q-item-section>
+
+                      <q-item-section side>
+                        <q-btn flat round icon="edit" />
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-card-section>
+                <q-separator vertical></q-separator>
+                <q-card-section class="q-pa-none col">
+                  <q-list>
+                    <q-item-label header>Viewers</q-item-label>
+                    <q-item v-for="viewer in hotel.viewers" :key="viewer._id">
+                      <q-item-section>
+                        <q-item-label>{{ viewer.name }}</q-item-label>
+                      </q-item-section>
+
+                      <!-- <q-item-section side>
+                  <q-btn flat round icon="edit" />
+                </q-item-section> -->
+                    </q-item>
+                  </q-list>
+                </q-card-section>
+              </q-card-section>
+            </q-card>
           </div>
-        </q-card-section>
-        <q-separator></q-separator>
-        <q-card-section horizontal class="q-pa-none">
-          <q-card-section class="q-pa-none col">
-            <q-list>
-              <q-item-label header>Managers</q-item-label>
-              <q-item v-for="manager in hotel.managers" :key="manager._id">
-                <q-item-section>
-                  <q-item-label>{{ manager.name }}</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-btn flat round icon="edit" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card-section>
-          <q-separator vertical></q-separator>
-          <q-card-section class="q-pa-none col">
-            <q-list>
-              <q-item-label header>Viewers</q-item-label>
-              <q-item v-for="viewer in hotel.viewers" :key="viewer._id">
-                <q-item-section>
-                  <q-item-label>{{ viewer.name }}</q-item-label>
-                </q-item-section>
-
-                <q-item-section side>
-                  <q-btn flat round icon="edit" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card-section>
-        </q-card-section>
-      </q-card>
-
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">
-            Rooms &amp; Floors
-            <q-btn
+          <div class="col-4">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">
+                  Rooms &amp; Floors
+                  <!-- <q-btn
               class="float-right q-ml-sm"
               color="primary"
               @click="displayNewRoomForm"
             >
               Add Room
-            </q-btn>
-            <q-btn
+            </q-btn> -->
+                  <!-- <q-btn
               class="float-right"
               color="primary"
               @click="displayNewFloorForm"
             >
               Add Floor
-            </q-btn>
-          </div>
-        </q-card-section>
-        <q-separator></q-separator>
-        <q-card-section horizontal class="q-pa-none">
-          <q-card-section class="q-pa-none col">
+            </q-btn> -->
+                </div>
+              </q-card-section>
+              <q-separator></q-separator>
+              <q-card-section horizontal class="q-pa-none">
+                <!-- <q-card-section class="q-pa-none col">
             <q-list>
               <q-item-label header>Floors</q-item-label>
-              <q-item v-for="floor in floors" :key="floor._id">
+              <q-item v-for="floor in hotel.floors" :key="floor._id">
                 <q-item-section>
                   <q-item-label>{{ floor.label }}</q-item-label>
                 </q-item-section>
 
-                <q-item-section side>
+                !-- <q-item-section side>
                   <q-btn flat round icon="edit" />
-                </q-item-section>
+                </q-item-section> --
               </q-item>
             </q-list>
-          </q-card-section>
-          <q-separator vertical></q-separator>
-          <q-card-section class="q-pa-none col">
-            <q-list>
-              <q-item-label header>Rooms</q-item-label>
-              <q-item v-for="room in rooms" :key="room._id">
-                <q-item-section>
-                  <q-item-label>{{ room.label }}</q-item-label>
-                </q-item-section>
+          </q-card-section> -->
+                <q-separator vertical></q-separator>
+                <q-card-section class="q-pa-none col">
+                  <q-list>
+                    <q-item-label header>Rooms</q-item-label>
+                    <q-item v-for="room in rooms" :key="room._id">
+                      <q-item-section>
+                        <q-item-label>{{ room.label }}</q-item-label>
+                      </q-item-section>
 
-                <q-item-section side>
+                      <!-- <q-item-section side>
                   <q-btn flat round icon="edit" />
-                </q-item-section>
-              </q-item>
-            </q-list>
-          </q-card-section>
-        </q-card-section>
-      </q-card>
+                </q-item-section> -->
+                    </q-item>
+                  </q-list>
+                </q-card-section>
+              </q-card-section>
+            </q-card>
+          </div>
+        </div>
+      </div>
     </div>
 
     <q-dialog v-model="showAddUserForm">
@@ -300,21 +310,24 @@ export default {
 
       hotel: null,
 
-      floors: [],
-      rooms: []
+      floors: []
     };
   },
 
   computed: {
     floorOptions() {
-      return this.floors.map(f => ({ value: f._id, label: f.label }));
+      return this.hotel.floors.map(f => ({ value: f._id, label: f.label }));
+    },
+
+    rooms() {
+      return this.hotel.floors.reduce((r, f) => r.concat(f.rooms), []);
     }
   },
 
   created() {
     this.fetchHotel();
-    this.fetchFloors();
-    this.fetchRooms();
+    // this.fetchFloors();
+    // this.fetchRooms();
   },
 
   methods: {
@@ -324,44 +337,6 @@ export default {
         .get("/hotels/" + this.hotelid)
         .then(response => {
           this.hotel = response.data;
-        })
-        .catch(err => {
-          console.error(err);
-          this.$q.notify({
-            type: "negative",
-            message: "Error occured."
-          });
-        })
-        .finally(() => {
-          this.$q.loading.hide();
-        });
-    },
-
-    fetchRooms() {
-      this.$q.loading.show();
-      this.$axios
-        .get("/hotels/" + this.hotelid + "/rooms")
-        .then(response => {
-          this.rooms = response.data;
-        })
-        .catch(err => {
-          console.error(err);
-          this.$q.notify({
-            type: "negative",
-            message: "Error occured."
-          });
-        })
-        .finally(() => {
-          this.$q.loading.hide();
-        });
-    },
-
-    fetchFloors() {
-      this.$q.loading.show();
-      this.$axios
-        .get("/hotels/" + this.hotelid + "/floors")
-        .then(response => {
-          this.floors = response.data;
         })
         .catch(err => {
           console.error(err);

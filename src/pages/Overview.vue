@@ -1,14 +1,18 @@
 <template>
   <q-page>
     <div class="hotel-banner-container text-center">
-      <q-img :src="hotelLogoBanner" height="128px" />
+      <q-img :src="hotelLogoBanner" height="128px">
+        <div class="absolute-center">
+          <div class="text-h5">{{ hotel.name }}</div>
+        </div>
+      </q-img>
     </div>
 
     <div class="q-pa-md">
       <q-markup-table flat>
         <tbody>
-          <tr v-for="floor in reversedFloors" :key="floor._id">
-            <td v-if="reversedFloors.length > 1">{{ floor.label }}</td>
+          <tr v-for="floor in hotel.floors" :key="floor._id">
+            <td v-if="hotel.floors.length > 1">{{ floor.label }}</td>
             <td class="q-gutter-sm">
               <q-btn
                 v-for="room in floor.rooms"
@@ -30,12 +34,10 @@
       </q-markup-table>
     </div>
 
+    <!-- {{ roomsMap }} -->
+
     <q-dialog v-model="showRoomOptions">
-      <RoomUpdateCard
-        :room="selectedRoom"
-        @bill="displayBill"
-        @done="fetchFloors"
-      />
+      <RoomUpdateCard :room="selectedRoom" @bill="displayBill" />
     </q-dialog>
 
     <q-dialog v-model="showBill">
@@ -63,8 +65,6 @@ export default {
 
   data() {
     return {
-      hotelLogoBanner: "https://picsum.photos/1024/128",
-
       showRoomOptions: false,
       selectedRoom: null,
 
@@ -77,13 +77,31 @@ export default {
       showBill: false,
       billData: null,
 
-      floors: []
+      floors: [],
+
+      futureSync: false
     };
   },
 
   computed: {
-    reversedFloors() {
-      return [...this.floors].sort((a, b) => b.order - a.order);
+    // reversedFloors() {
+    //   return [...this.floors].sort((a, b) => b.order - a.order);
+    // },
+
+    hotelLogoBanner() {
+      return "https://picsum.photos/seed/" + this.hotel._id + "/1024/128";
+    },
+
+    hotel() {
+      return this.$store.getters["general/hotel"];
+    },
+
+    bookingsMap() {
+      return this.$store.getters["general/bookingsMap"];
+    },
+
+    roomsMap() {
+      return this.$store.getters["general/roomsMap"];
     },
 
     locked: {
@@ -94,14 +112,45 @@ export default {
 
     user() {
       return this.$store.getters["auth/user"];
+    },
+
+    connected() {
+      return navigator.onLine;
     }
   },
 
-  created() {
-    this.fetchFloors();
+  watch: {
+    hotel: {
+      handler: function() {
+        if (this.connected) {
+          this.syncHotelRooms();
+        } else {
+          this.futureSync = true;
+        }
+      },
+      deep: true
+    },
+
+    connected(connectionStatus) {
+      if (connectionStatus && this.futureSync) {
+        this.syncHotelRooms();
+      }
+    }
   },
 
   methods: {
+    syncHotelRooms() {
+      this.$axios
+        .put(
+          process.env.API + "/hotels/" + this.hotel._id + "/rooms",
+          this.hotel
+        )
+        .then(response => {
+          this.futureSync = false;
+        })
+        .catch(console.error);
+    },
+
     async handleCapture(blob) {
       let now = new moment.tz("Asia/Kolkata");
 
@@ -135,17 +184,6 @@ export default {
       }
     },
 
-    async fetchFloors() {
-      let floors = await this.$db.Floor.asyncFind({});
-      for (let i = 0; i < floors.length; i++) {
-        floors[i].rooms = await this.$db.Room.asyncFind({
-          floor: floors[i]._id
-        });
-      }
-
-      this.floors = floors;
-    },
-
     displayBill(data) {
       this.billData = data;
       this.showBill = true;
@@ -162,7 +200,7 @@ export default {
         if (this.selectedRoom.occupied) {
           this.checkOut();
         } else {
-          this.checkIn();
+          if (room.available) this.checkIn();
         }
       }
     },
@@ -201,21 +239,13 @@ export default {
           aadhar: this.aadharFilePath
         });
 
-        await this.$db.Room.asyncUpdate(
-          {
-            _id: this.selectedRoom._id
-          },
-          {
-            $set: {
-              occupied: true
-            }
-          }
-        );
+        this.$store.dispatch("general/setOccupied", {
+          roomIndex: this.roomsMap[this.selectedRoom._id],
+          occupied: true
+        });
       } catch (err) {
         console.error(err);
       }
-
-      this.fetchFloors();
 
       this.$q.notify({
         type: "positive",
@@ -256,21 +286,13 @@ export default {
           }
         );
 
-        await this.$db.Room.asyncUpdate(
-          {
-            _id: this.selectedRoom._id
-          },
-          {
-            $set: {
-              occupied: false
-            }
-          }
-        );
+        this.$store.dispatch("general/setOccupied", {
+          roomIndex: this.roomsMap[this.selectedRoom._id],
+          occupied: false
+        });
       } catch (err) {
         console.error(err);
       }
-
-      this.fetchFloors();
 
       this.$q.notify({
         type: "positive",

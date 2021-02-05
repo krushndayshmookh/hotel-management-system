@@ -249,6 +249,22 @@ export default {
   },
 
   computed: {
+    hotel() {
+      return this.$store.getters["general/hotel"];
+    },
+
+    bookingsMap() {
+      return this.$store.getters["general/bookingsMap"];
+    },
+
+    roomsMap() {
+      return this.$store.getters["general/roomsMap"];
+    },
+
+    rooms() {
+      return this.$store.getters["general/rooms"];
+    },
+
     expanded: {
       get() {
         return this.expandedValue && this.roomState.available;
@@ -350,7 +366,7 @@ export default {
     },
 
     async fetchRoom() {
-      this.roomState = await this.$db.Room.asyncFindOne({ _id: this.room._id });
+      this.roomState = _.cloneDeep(this.room);
 
       if (this.roomState.occupied) {
         this.booking = await this.$db.Booking.asyncFindOne({
@@ -359,26 +375,21 @@ export default {
             $exists: false
           }
         });
-
         this.booking.checkIn = moment(this.booking.checkIn)
           .tz("Asia/Kolkata")
           .format("DD MMM YYYY HH:mm");
-
         this.guest = await this.$db.Guest.asyncFindOne({
           _id: this.booking.guest
         });
       }
     },
 
-    saveRoom(roomState) {
-      this.$db.Room.update(
-        { _id: roomState._id },
-        roomState,
-        { returnUpdatedDocs: true, upsert: true },
-        function(err, numAffected, docs) {
-          if (err) console.error(err);
-        }
-      );
+    saveRoom({ occupied, available }) {
+      this.$store.dispatch("general/setRoom", {
+        occupied,
+        available,
+        roomIndex: this.roomsMap[this.room._id]
+      });
     }
   }
 };

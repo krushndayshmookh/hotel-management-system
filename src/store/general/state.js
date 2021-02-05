@@ -1,5 +1,10 @@
 export default function() {
   return {
-    locked: true
+    locked: true,
+    hotel: {
+      floors: []
+    },
+    guests: [],
+    bookings: []
   };
 }

@@ -43,6 +43,7 @@
 </template>
 
 <script>
+import { fetchHotel } from 'src/store/general/actions';
 export default {
   name: "PageLogin",
   data() {
@@ -62,10 +63,10 @@ export default {
           if (response.data.status) {
             this.$store.dispatch("auth/login", response.data);
 
-            const userType = response.data.user.type;
-            if (userType == "admin") this.$router.push("/hotels");
-            if (userType == "manager" || userType == "viewer") {
-              await this.fetchHotelDetails(userType);
+            const { type, hotel } = response.data.user;
+            if (type == "admin") this.$router.push("/hotels");
+            if (type == "manager" || type == "viewer") {
+              this.$store.dispatch('general/fetchHotel', hotel);
               this.$router.push("/overview");
             }
           } else {
@@ -85,13 +86,7 @@ export default {
         });
     },
 
-    async fetchHotelDetails(userType) {
-      await this.$axios
-        .get("/hotels/details?userType=" + userType)
-        .then(async response => {
-          await this.$db.resetWith(response.data);
-        });
-    }
+    
   }
 };
 </script>
