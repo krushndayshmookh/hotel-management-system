@@ -31,8 +31,11 @@ branches:
     - "/^v\\d+\\.\\d+\\.\\d+$/"
 
 deploy:
-  provider: releases
-  api_key: "72aa0539c6553adcf3f7876370a320a836282611"
+  provider: s3
+  access_key_id: "AKIAJPAD3JIJKIMGBXEQ"
+  secret_access_key: "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"
+  region: "ap-south-1"
+  bucket: "humbleshit"
   file_glob: true
   file: "/home/travis/build/root-kings/hotel-management-system/**/dist/electron/Packaged/Root HMS 0.0.1.exe"
   skip_cleanup: true
