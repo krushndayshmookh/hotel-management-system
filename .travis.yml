@@ -17,7 +17,7 @@ script:
       -v ~/.cache/electron:/root/.cache/electron \
       -v ~/.cache/electron-builder:/root/.cache/electron-builder \
       electronuserland/builder:wine 
-    npm i && quasar build -m electron -T win32
+  - npm i && quasar build -m electron -T win32
   
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
