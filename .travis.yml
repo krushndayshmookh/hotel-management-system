@@ -22,7 +22,7 @@ script:
     else
       yarn release
     fi
-  
+
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
 
@@ -36,6 +36,6 @@ deploy:
   secret_access_key: "UFTw4sJeXKO22CUEc8c5AahK6OxHgaPMeP+FGbVE"
   region: "ap-south-1"
   bucket: "humbleshit"
-  file_glob: true
-  file: "/home/travis/build/root-kings/hotel-management-system/**/dist/electron/Packaged/Root HMS 0.0.1.exe"
+  local_dir: dist/electron/Packaged
   skip_cleanup: true
+  acl: public_read
