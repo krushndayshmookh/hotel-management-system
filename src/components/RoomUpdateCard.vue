@@ -10,7 +10,7 @@
 
     <q-card-section class="q-pa-none">
       <q-list separator>
-        <q-item>
+        <!-- <q-item>
           <q-item-section>Available</q-item-section>
           <q-item-section side>
             <q-toggle
@@ -18,13 +18,13 @@
               :disable="roomState.occupied"
             />
           </q-item-section>
-        </q-item>
+        </q-item> -->
 
-        <q-expansion-item
+        <!-- <q-expansion-item
           v-model="expanded"
           label="Guest"
           :disable="!roomState.available"
-        >
+        > -->
           <q-card>
             <q-card-section>
               <div class="q-gutter-sm">
@@ -188,7 +188,7 @@
               </div>
             </q-card-section>
           </q-card>
-        </q-expansion-item>
+        <!-- </q-expansion-item> -->
       </q-list>
     </q-card-section>
   </q-card>
