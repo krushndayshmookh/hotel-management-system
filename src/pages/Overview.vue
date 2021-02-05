@@ -2,8 +2,18 @@
   <q-page>
     <div class="hotel-banner-container text-center">
       <q-img :src="hotelLogoBanner" height="128px">
-        <div class="absolute-center">
-          <div class="text-h5">{{ hotel.name }}</div>
+        <div class="absolute-bottom">
+          <div class="text-h4">{{ hotel.name }}</div>
+
+          <div class="summary text-center q-gutter-sm q-mt-md">
+            <q-badge color="green-7">
+              Occupied: {{ roomCounts.occupied }}
+            </q-badge>
+            <q-badge color="grey-9">
+              Unavailable: {{ roomCounts.unavailable }}
+            </q-badge>
+            <q-badge color="primary">Total: {{ roomCounts.total }}</q-badge>
+          </div>
         </div>
       </q-img>
     </div>
@@ -102,6 +112,10 @@ export default {
 
     roomsMap() {
       return this.$store.getters["general/roomsMap"];
+    },
+
+    roomCounts() {
+      return this.$store.getters["general/roomCounts"];
     },
 
     locked: {

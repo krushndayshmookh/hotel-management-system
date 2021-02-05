@@ -144,7 +144,7 @@ export default {
         try {
           this.$store.dispatch("auth/setHeaders");
           await this.$axios.get("/auth/login/status");
-          this.$router.push("/overview");
+          // this.$router.push("/overview");
         } catch (error) {
           // console.error(error);
           this.logout();

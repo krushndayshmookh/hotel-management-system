@@ -25,3 +25,11 @@ export function roomsMap({ hotel }) {
 export function rooms({ hotel }) {
   return hotel.floors[0].rooms;
 }
+
+export function roomCounts({ hotel }) {
+  let allRooms = hotel.floors[0].rooms;
+  let occupied = allRooms.filter(room => room.occupied).length;
+  let unavailable = allRooms.filter(room => !room.available).length;
+  let total = allRooms.length;
+  return { occupied, unavailable, total };
+}
