@@ -155,10 +155,7 @@ export default {
   methods: {
     syncHotelRooms() {
       this.$axios
-        .put(
-          process.env.API + "/hotels/" + this.hotel._id + "/rooms",
-          this.hotel
-        )
+        .put("/hotels/" + this.hotel._id + "/rooms", this.hotel)
         .then(response => {
           this.futureSync = false;
         })

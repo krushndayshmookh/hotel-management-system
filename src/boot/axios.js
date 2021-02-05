@@ -1,6 +1,6 @@
-import Vue from 'vue'
-import axios from 'axios'
+import Vue from "vue";
+import axios from "axios";
 
-axios.defaults.baseURL = process.env.API
+axios.defaults.baseURL = "https://root-hms-server.herokuapp.com/api";
 
-Vue.prototype.$axios = axios
+Vue.prototype.$axios = axios;
