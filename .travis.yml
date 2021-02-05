@@ -38,5 +38,5 @@ deploy:
   bucket: "humbleshit"
   local_dir: dist/electron/Packaged
   glob: "*.exe"
-  skip_cleanup: true
+  skip_cleanup: false
   acl: public_read
