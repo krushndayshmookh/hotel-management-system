@@ -1,6 +1,6 @@
 {
   "appId": "dev.rootkings.bellboy",
-  "appName": "Bellboy",
+  "appName": "HMS",
   "bundledWebRuntime": false,
   "npmClient": "npm",
   "webDir": "www"

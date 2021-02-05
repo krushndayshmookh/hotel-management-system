@@ -4,7 +4,7 @@
       <q-card-section>
         <div>
           <p class="text-h5 text-weight-bold q-mt-sm text-primary">
-            Welcome To Bellboy
+            Welcome To HMS
           </p>
           <p class="text-body1">Please login to continue</p>
         </div>
