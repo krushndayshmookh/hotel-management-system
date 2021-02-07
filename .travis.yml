@@ -1,42 +1,39 @@
 matrix:
   include:
-    - os: linux
-      services: docker
-      language: generic
-
+  - os: linux
+    services: docker
+    language: generic
 cache:
   directories:
-    - node_modules
-    - $HOME/.cache/electron
-    - $HOME/.cache/electron-builder
-
+  - node_modules
+  - "$HOME/.cache/electron"
+  - "$HOME/.cache/electron-builder"
 script:
-  - |
-    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
-      docker run --rm \
-        -v ${PWD}:/project \
-        -v ~/.cache/electron:/root/.cache/electron \
-        -v ~/.cache/electron-builder:/root/.cache/electron-builder \
-        electronuserland/builder:wine \
-        /bin/bash -c "yarn --link-duplicates --pure-lockfile && npx quasar build -m electron -T win32"
-    else
-      yarn release
-    fi
-
+- |
+  if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+    docker run --rm \
+      -v ${PWD}:/project \
+      -v ~/.cache/electron:/root/.cache/electron \
+      -v ~/.cache/electron-builder:/root/.cache/electron-builder \
+      electronuserland/builder:wine \
+      /bin/bash -c "yarn --link-duplicates --pure-lockfile && npx quasar build -m electron -T win32"
+  else
+    yarn release
+  fi
 before_cache:
-  - rm -rf $HOME/.cache/electron-builder/wine
-
+- rm -rf $HOME/.cache/electron-builder/wine
 branches:
   except:
-    - "/^v\\d+\\.\\d+\\.\\d+$/"
-
+  - "/^v\\d+\\.\\d+\\.\\d+$/"
 deploy:
   provider: s3
-  access_key_id: "AKIAJPAD3JIJKIMGBXEQ"
-  secret_access_key: "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"
-  region: "ap-south-1"
-  bucket: "humbleshit"
-  local_dir: dist/electron/Packaged
+  access_key_id: AKIAYMADHX2LKYBY7EF3
+  secret_access_key:
+    secure: XyeWMeczZdWhTFLJGlMpbW3msEKAquJqLpUl4ouMR8kQ40069KT6/6joVFeIatpUfcsJ1SkqXHzbLBPlqd+N+Y/WAjC3wESbwJffvR7O8IG4TeP94Vko8h3ShhGJmyU2t99Y3sq/+v8M/7tN4A6F7RFk+8XZKHJ3whgkjuKVp7Ap2UOh32yioB5o63dlgIUhlB0i+D3sFUuy9B8mN/KKq64cGgNqvlUqET0ezF00ldCIGuzbd00cpS+H4lES+HxLG81oP5LFiTIOsPqm617ljbuGh5rpoiOGy4cofo54SnnLZsQNWgVTPpssLgekJVo1HuHGRhEK5IvWJRbgaVklN/ljSBWUGXM5Mj+47xAqH+vo9Xd1ObvIsd0XriaGwpBXjxH9/U1fz7WJlYvluSSOEu7sST84ZgEFLCFPZuWDaweyMYEWtEwRLzuWO0OYd8Y8xST6+GmpMkvtIr2J964rurmJO3xpp5HE0rEjirNjjKz9c9SQ4JYOvHj0W8AuwTy2SSGIzMoew3QNvfjSKnyGZ792idp70RvBPNCAuSkeDhLkvYmwHfpb5VCK8gncOR5FAWL98fkXtWTeNi4WDdQX2x4paX8foRYpZ9accVa9LmGLLM/LYRI8YVPK/8UsQzoT/TEcKprYwO0MSWOREzC8TutMxE9jPA6CyguwycD3phA=
+  bucket: random-access
   glob: "*.exe"
-  skip_cleanup: false
+  upload-dir: root-hms
   acl: public_read
+  on:
+    repo: root-kings/hotel-management-system
+  skip_cleanup: 'true'
