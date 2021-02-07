@@ -18,26 +18,32 @@
       </q-img>
     </div>
 
-    <div class="q-pa-md">
+    <div class="q-pa-md q-px-xl">
       <q-markup-table flat>
         <tbody>
           <tr v-for="floor in hotel.floors" :key="floor._id">
             <td v-if="hotel.floors.length > 1">{{ floor.label }}</td>
             <td class="q-gutter-sm">
-              <q-btn
-                v-for="room in floor.rooms"
-                size="xl"
-                class="q-px-sm"
-                :key="room._id"
-                :label="room.label"
-                :flat="!room.occupied && !room.available"
-                :outline="room.occupied"
-                :color="
-                  !room.available ? 'grey' : room.occupied ? 'red' : 'green'
-                "
-                @click="toggleOccupiedStatus(room)"
-                @contextmenu.prevent="viewRoom(room)"
-              />
+              <div class="row q-col-gutter-lg">
+                <div
+                  class="col-4 col-sm-3 col-md-2 col-lg-1"
+                  v-for="room in floor.rooms"
+                  :key="room._id"
+                >
+                  <q-btn
+                    size="xl"
+                    class="q-px-sm full-width q-py-sm"
+                    :label="room.label"
+                    :flat="!room.occupied && !room.available"
+                    :outline="room.occupied"
+                    :color="
+                      !room.available ? 'grey' : room.occupied ? 'red' : 'green'
+                    "
+                    @click="toggleOccupiedStatus(room)"
+                    @contextmenu.prevent="viewRoom(room)"
+                  />
+                </div>
+              </div>
             </td>
           </tr>
         </tbody>
