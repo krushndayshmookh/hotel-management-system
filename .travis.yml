@@ -26,14 +26,8 @@ branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
 deploy:
-  provider: s3
-  access_key_id: AKIAYMADHX2LKYBY7EF3
-  secret_access_key: $AWS_SECRET
-  bucket: "random-access"
-  region: "ap-south-1"
-  glob: "dist/electron/Packaged/*.exe"
-  upload-dir: root-hms
-  acl: public_read
-  on:
-    repo: root-kings/hotel-management-system
-  skip_cleanup: 'true'
+  provider: releases
+  api_key: $GITHUB_TOKEN
+  file_glob: "dist/electron/Packaged/*.exe"
+  skip_cleanup: true
+  draft: true
