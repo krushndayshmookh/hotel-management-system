@@ -29,7 +29,7 @@ deploy:
   provider: s3
   access_key_id: AKIAYMADHX2LKYBY7EF3
   secret_access_key: $AWS_SECRET
-  bucket: random-access
+  bucket: "random-access"
   region: "ap-south-1"
   glob: "dist/electron/Packaged/*.exe"
   upload-dir: root-hms
