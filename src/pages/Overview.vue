@@ -9,9 +9,9 @@
             <q-badge color="green-7">
               Occupied: {{ roomCounts.occupied }}
             </q-badge>
-            <q-badge color="grey-9">
+            <!-- <q-badge color="grey-9">
               Unavailable: {{ roomCounts.unavailable }}
-            </q-badge>
+            </q-badge> -->
             <q-badge color="primary">Total: {{ roomCounts.total }}</q-badge>
           </div>
         </div>
