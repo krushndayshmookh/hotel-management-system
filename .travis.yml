@@ -16,7 +16,7 @@ script:
       -v ~/.cache/electron:/root/.cache/electron \
       -v ~/.cache/electron-builder:/root/.cache/electron-builder \
       electronuserland/builder:wine \
-      /bin/bash -c "yarn --link-duplicates --pure-lockfile && npx quasar build -m electron -T win32"
+      /bin/bash -c "yarn --link-duplicates --pure-lockfile && npx quasar build -m electron -T win32 && rm -rf dist/electron/Packaged/win-unpacked"
   else
     yarn release
   fi
@@ -26,7 +26,6 @@ branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
 before_deploy:
-  - rm -rf dist/electron/Packaged/win-unpacked
   - export $DEPLOY_FOLDER=build-${$(date +'%Y%m%d%H%M%S')}
 deploy:
   provider: s3
