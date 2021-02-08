@@ -1,5 +1,7 @@
 # Bellboy (hotel-management-system)
 
+![build-status](https://travis-ci.com/root-kings/hotel-management-system.svg?branch=master)
+
 A cross platform hotel management app
 
 ## Install the dependencies
