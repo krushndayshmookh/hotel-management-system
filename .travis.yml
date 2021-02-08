@@ -27,6 +27,7 @@ branches:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
 predeploy:
   - rm -rf dist/electron/Packaged/win-unpacked
+  - export $DEPLOY_FOLDER=build-${$(date +'%Y%m%d%H%M%S')}
 deploy:
   provider: s3
   access_key_id: AKIAYMADHX2LKYBY7EF3
@@ -34,7 +35,7 @@ deploy:
   bucket: "random-access"
   region: "ap-south-1"
   glob: "dist/electron/Packaged/*.exe"
-  upload-dir: root-hms
+  upload-dir: root-hms/$DEPLOY_FOLDER
   acl: public_read
   on:
     repo: root-kings/hotel-management-system
