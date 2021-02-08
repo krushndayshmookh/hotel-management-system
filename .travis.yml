@@ -25,6 +25,8 @@ before_cache:
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
+predeploy:
+  - rm -rf dist/electron/Packaged/win-unpacked
 deploy:
   provider: s3
   access_key_id: AKIAYMADHX2LKYBY7EF3
