@@ -25,8 +25,6 @@ before_cache:
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
-before_deploy:
-  - export $DEPLOY_FOLDER=build-${$(date +'%Y%m%d%H%M%S')}
 deploy:
   provider: s3
   access_key_id: AKIAYMADHX2LKYBY7EF3
@@ -34,7 +32,7 @@ deploy:
   bucket: "random-access"
   region: "ap-south-1"
   glob: "dist/electron/Packaged/*.exe"
-  upload-dir: root-hms/$DEPLOY_FOLDER
+  upload-dir: root-hms/build-${$(date +'%Y%m%d%H%M%S')}
   acl: public_read
   on:
     repo: root-kings/hotel-management-system
