@@ -25,7 +25,7 @@ before_cache:
 branches:
   except:
   - "/^v\\d+\\.\\d+\\.\\d+$/"
-predeploy:
+before_deploy:
   - rm -rf dist/electron/Packaged/win-unpacked
   - export $DEPLOY_FOLDER=build-${$(date +'%Y%m%d%H%M%S')}
 deploy:
