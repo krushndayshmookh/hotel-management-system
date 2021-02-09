@@ -33,7 +33,7 @@ deploy:
   secret_access_key: $AWS_SECRET
   bucket: "random-access"
   region: "ap-south-1"
-  glob: "dist/electron/Packaged/*.exe"
+  local_dir: "dist/electron/Packaged"
   upload-dir: root-hms/$DEPLOY_FOLDER
   acl: public_read
   on:
