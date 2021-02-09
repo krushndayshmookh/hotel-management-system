@@ -59,27 +59,6 @@
       <div class="col-12 col-md-6">
         <q-card>
           <q-card-section>
-            <div class="text-h6">Bookings by Month</div>
-          </q-card-section>
-          <q-card-section>
-            <la-cartesian
-              narrow
-              :bound="[0]"
-              :data="bookingsByMonth"
-              autoresize
-            >
-              <la-bar prop="value"></la-bar>
-              <!-- <la-y-axis></la-y-axis> -->
-              <la-x-axis prop="label"></la-x-axis>
-              <la-tooltip></la-tooltip>
-            </la-cartesian>
-          </q-card-section>
-        </q-card>
-      </div>
-
-      <div class="col-12 col-md-6">
-        <q-card>
-          <q-card-section>
             <div class="text-h6">Bookings in {{ selectedMonth }}</div>
           </q-card-section>
           <q-card-section>
@@ -100,6 +79,25 @@
               <la-x-axis prop="day"></la-x-axis>
               <la-tooltip></la-tooltip>
               <la-legend selectable></la-legend>
+            </la-cartesian>
+          </q-card-section>
+        </q-card>
+
+        <q-card class="q-mt-md">
+          <q-card-section>
+            <div class="text-h6">Bookings by Month</div>
+          </q-card-section>
+          <q-card-section>
+            <la-cartesian
+              narrow
+              :bound="[0]"
+              :data="bookingsByMonth"
+              autoresize
+            >
+              <la-bar prop="value"></la-bar>
+              <!-- <la-y-axis></la-y-axis> -->
+              <la-x-axis prop="label"></la-x-axis>
+              <la-tooltip></la-tooltip>
             </la-cartesian>
           </q-card-section>
         </q-card>
@@ -196,7 +194,7 @@ export default {
 
         return data;
       }
-      return {};
+      return [];
     },
 
     daysInSelectedMonth() {
