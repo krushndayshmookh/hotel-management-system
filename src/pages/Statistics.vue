@@ -4,6 +4,61 @@
       <div class="col-12 col-md-6">
         <q-card>
           <q-card-section>
+            <div class="text-h6">
+              <div class="row q-col-gutter-md">
+                <div class="col-12 col-md-6">
+                  <div class="text-h6">Bookings</div>
+                </div>
+                <div class="col-6 col-md-3">
+                  <q-select
+                    outlined
+                    dense
+                    :options="rooms"
+                    option-label="label"
+                    option-value="_id"
+                    label="Room"
+                    v-model="selectedRoom"
+                    map-options
+                    emit-value
+                  />
+                </div>
+                <div class="col-6 col-md-3">
+                  <q-select
+                    outlined
+                    dense
+                    :options="months"
+                    label="Month"
+                    v-model="selectedMonth"
+                  />
+                </div>
+              </div>
+            </div>
+          </q-card-section>
+          <q-card-section>
+            <q-markup-table>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Bookings</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(item, idx) in bookingsByRoomAndMonth" :key="idx">
+                  <td>{{ item.day }} {{ selectedMonth }}</td>
+                  <td>
+                    {{ item.value }}
+                    <q-icon name="star" color="orange" v-if="item.value > 1" />
+                  </td>
+                </tr>
+              </tbody>
+            </q-markup-table>
+          </q-card-section>
+        </q-card>
+      </div>
+
+      <div class="col-12 col-md-6">
+        <q-card>
+          <q-card-section>
             <div class="text-h6">Bookings by Month</div>
           </q-card-section>
           <q-card-section>
@@ -49,6 +104,8 @@
           </q-card-section>
         </q-card>
       </div>
+
+      {{ bookings }}
     </div>
   </q-page>
 </template>
@@ -59,12 +116,31 @@ import _ from "lodash";
 
 const NOW = new moment();
 
+const MONTHS = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec"
+];
+
 export default {
   data() {
     return {
       bookings: [],
 
-      now: NOW
+      now: NOW,
+      months: MONTHS,
+
+      selectedRoom: null,
+      selectedMonth: null
     };
   },
 
@@ -117,6 +193,39 @@ export default {
       }));
 
       return data;
+    },
+
+    bookingsByRoomAndMonth() {
+      if (this.selectedRoom && this.selectedMonth) {
+        let data = [];
+
+        // let dot = {};
+
+        // this.roomsLabels.forEach(r => (dot[r] = 0));
+
+        const daysInSelectedMonth = NOW.clone()
+          .set("month", this.selectedMonth)
+          .daysInMonth();
+
+        for (let i = 0; i < daysInSelectedMonth; i++)
+          data.push({ day: i + 1, value: 0 });
+
+        this.bookings
+          .filter(booking => new moment(booking.checkIn).month() == NOW.month())
+          .forEach(booking => {
+            let date = new moment(booking.checkIn);
+            let roomLabel = this.roomsLabels[this.roomsMap[booking.room]];
+            data[date.day()].value++;
+          });
+
+        // data = Object.keys(data).map(day => ({
+        //   day,
+        //   ...data[day]
+        // }));
+
+        return data;
+      }
+      return [];
     },
 
     rooms() {
