@@ -32,7 +32,7 @@ deploy:
   bucket: "random-access"
   region: "ap-south-1"
   local_dir: "dist/electron/Packaged"
-  upload-dir: root-hms/build-${$(date +'%Y%m%d%H%M%S')}
+  upload-dir: root-hms/build-$TRAVIS_BUILD_NUMBER
   acl: public_read
   on:
     repo: root-kings/hotel-management-system
