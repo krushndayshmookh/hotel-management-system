@@ -7,7 +7,7 @@
             <div class="text-h6">
               <div class="row q-col-gutter-md">
                 <div class="col-12 col-md-6">
-                  <div class="text-h6">Bookings</div>
+                  <div class="text-h6">Bookings by Room</div>
                 </div>
                 <div class="col-6 col-md-3">
                   <q-select
@@ -35,7 +35,7 @@
             </div>
           </q-card-section>
           <q-card-section>
-            <q-markup-table>
+            <q-markup-table flat bordered>
               <thead>
                 <tr>
                   <th>Date</th>
@@ -80,7 +80,7 @@
       <div class="col-12 col-md-6">
         <q-card>
           <q-card-section>
-            <div class="text-h6">Bookings in {{ now.format("MMMM") }}</div>
+            <div class="text-h6">Bookings in {{ selectedMonth }}</div>
           </q-card-section>
           <q-card-section>
             <la-cartesian
@@ -96,7 +96,7 @@
                 :key="l"
                 :label="'Room ' + l"
               ></la-bar>
-              <!-- <la-y-axis></la-y-axis> -->
+
               <la-x-axis prop="day"></la-x-axis>
               <la-tooltip></la-tooltip>
               <la-legend selectable></la-legend>
@@ -104,8 +104,6 @@
           </q-card-section>
         </q-card>
       </div>
-
-      {{ bookings }}
     </div>
   </q-page>
 </template>
@@ -170,58 +168,62 @@ export default {
     },
 
     bookingsThisMonth() {
-      let data = {};
+      if (this.selectedMonth) {
+        let data = {};
 
-      let dot = {};
+        let dot = {};
 
-      this.roomsLabels.forEach(r => (dot[r] = 0));
+        this.roomsLabels.forEach(r => (dot[r] = 0));
 
-      for (let i = 0; i < NOW.daysInMonth(); i++)
-        data[i + 1] = _.cloneDeep(dot);
+        for (let i = 0; i < this.daysInSelectedMonth; i++)
+          data[i + 1] = _.cloneDeep(dot);
 
-      this.bookings
-        .filter(booking => new moment(booking.checkIn).month() == NOW.month())
-        .forEach(booking => {
-          let date = new moment(booking.checkIn);
-          let roomLabel = this.roomsLabels[this.roomsMap[booking.room]];
-          data[date.day()][roomLabel]++;
-        });
+        this.bookings
+          .filter(
+            booking =>
+              new moment(booking.checkIn).month() == this.selectedMonthValue
+          )
+          .forEach(booking => {
+            let date = new moment(booking.checkIn);
+            let roomLabel = this.roomsLabels[this.roomsMap[booking.room]];
+            data[date.date()][roomLabel]++;
+          });
 
-      data = Object.keys(data).map(day => ({
-        day,
-        ...data[day]
-      }));
+        data = Object.keys(data).map(day => ({
+          day,
+          ...data[day]
+        }));
 
-      return data;
+        return data;
+      }
+      return {};
+    },
+
+    daysInSelectedMonth() {
+      return new moment(this.selectedMonth, "MMM").daysInMonth();
+    },
+
+    selectedMonthValue() {
+      return new moment(this.selectedMonth, "MMM").month();
     },
 
     bookingsByRoomAndMonth() {
       if (this.selectedRoom && this.selectedMonth) {
         let data = [];
 
-        // let dot = {};
-
-        // this.roomsLabels.forEach(r => (dot[r] = 0));
-
-        const daysInSelectedMonth = NOW.clone()
-          .set("month", this.selectedMonth)
-          .daysInMonth();
-
-        for (let i = 0; i < daysInSelectedMonth; i++)
+        for (let i = 0; i < this.daysInSelectedMonth; i++)
           data.push({ day: i + 1, value: 0 });
 
         this.bookings
-          .filter(booking => new moment(booking.checkIn).month() == NOW.month())
+          .filter(
+            booking =>
+              new moment(booking.checkIn).month() == this.selectedMonthValue &&
+              booking.room == this.selectedRoom
+          )
           .forEach(booking => {
             let date = new moment(booking.checkIn);
-            let roomLabel = this.roomsLabels[this.roomsMap[booking.room]];
-            data[date.day()].value++;
+            data[date.date()].value++;
           });
-
-        // data = Object.keys(data).map(day => ({
-        //   day,
-        //   ...data[day]
-        // }));
 
         return data;
       }
