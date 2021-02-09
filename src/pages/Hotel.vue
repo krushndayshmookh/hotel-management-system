@@ -34,6 +34,7 @@
                     >
                       <q-item-section>
                         <q-item-label>{{ manager.name }}</q-item-label>
+                        <q-item-label caption>{{ manager.username }}</q-item-label>
                       </q-item-section>
 
                       <q-item-section side>
@@ -49,6 +50,7 @@
                     <q-item v-for="viewer in hotel.viewers" :key="viewer._id">
                       <q-item-section>
                         <q-item-label>{{ viewer.name }}</q-item-label>
+                        <q-item-label caption>{{ viewer.username }}</q-item-label>
                       </q-item-section>
 
                       <!-- <q-item-section side>
@@ -158,9 +160,9 @@
 
           <q-input
             outlined
-            label="Phone"
-            v-model="newUser.phone"
-            ref="userPhone"
+            label="Username"
+            v-model="newUser.username"
+            ref="userUsername"
             :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
@@ -291,7 +293,7 @@ export default {
       newUser: {
         name: null,
         type: null,
-        phone: null,
+        username: null,
         password: null,
         pin: null
       },
@@ -355,16 +357,16 @@ export default {
     },
 
     saveUser() {
-      let { userName, userPhone, userType, userPassword, userPin } = this.$refs;
+      let { userName, userUsername, userType, userPassword, userPin } = this.$refs;
       userName.validate();
-      userPhone.validate();
+      userUsername.validate();
       userType.validate();
       userPassword.validate();
       userPin.validate();
 
       let hasError =
         userName.hasError ||
-        userPhone.hasError ||
+        userUsername.hasError ||
         userType.hasError ||
         userPassword.hasError ||
         userPin.hasError;

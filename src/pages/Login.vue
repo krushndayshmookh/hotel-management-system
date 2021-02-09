@@ -11,11 +11,11 @@
         <form @submit.prevent.stop="login" class="q-gutter-sm">
           <q-input
             color="primary"
-            v-model="user.phone"
-            label="Phone"
-            type="phone"
-            ref="input_phone"
-            :rules="[val => !!val || 'Phone is required']"
+            v-model="user.username"
+            label="Username"
+            type="text"
+            ref="input_username"
+            :rules="[val => !!val || 'Username is required']"
             lazy-rules
           />
           <q-input
@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       user: {
-        phone: "",
+        username: "",
         password: ""
       }
     };
