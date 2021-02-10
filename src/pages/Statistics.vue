@@ -1,15 +1,36 @@
 <template>
   <q-page padding>
     <div class="row q-col-gutter-md">
-      <div class="col-12 col-md-6">
+      <div class="col-12">
         <q-card>
           <q-card-section>
             <div class="text-h6">
               <div class="row q-col-gutter-md">
-                <div class="col-12 col-md-6">
-                  <div class="text-h6">Bookings by Room</div>
+                <div class="col-12">
+                  <div class="text-h6">Bookings</div>
                 </div>
-                <div class="col-6 col-md-3">
+
+                <div class="col-12" v-if="!$q.screen.lt.sm">
+                  <q-btn-toggle
+                    push
+                    spread
+                    toggle-color="primary"
+                    :options="monthOptions"
+                    v-model="selectedMonth"
+                  />
+                </div>
+
+                <div class="col-12" v-if="!$q.screen.lt.sm">
+                  <q-btn-toggle
+                    push
+                    spread
+                    toggle-color="primary"
+                    :options="roomOptions"
+                    v-model="selectedRoom"
+                  />
+                </div>
+
+                <div class="col-6 col-md-3" v-if="$q.screen.lt.sm">
                   <q-select
                     outlined
                     dense
@@ -22,7 +43,7 @@
                     emit-value
                   />
                 </div>
-                <div class="col-6 col-md-3">
+                <div class="col-6 col-md-3" v-if="$q.screen.lt.sm">
                   <q-select
                     outlined
                     dense
@@ -35,23 +56,55 @@
             </div>
           </q-card-section>
           <q-card-section>
-            <q-markup-table flat bordered>
-              <thead>
-                <tr>
-                  <th>Date</th>
-                  <th>Bookings</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="(item, idx) in bookingsByRoomAndMonth" :key="idx">
-                  <td>{{ item.day }} {{ selectedMonth }}</td>
-                  <td>
-                    {{ item.value }}
-                    <q-icon name="star" color="orange" v-if="item.value > 1" />
-                  </td>
-                </tr>
-              </tbody>
-            </q-markup-table>
+            <div class="row q-col-gutter-md">
+              <div class="col-12 col-sm-6">
+                <q-markup-table flat bordered>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>
+                        Bookings in Room {{ selectedRoomName }} in
+                        {{ selectedMonth }}
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="(item, idx) in bookingsByRoomAndMonth"
+                      :key="idx"
+                    >
+                      <td>{{ item.day }} {{ selectedMonth }}</td>
+                      <td>
+                        {{ item.value }}
+                        <q-icon
+                          name="star"
+                          color="orange"
+                          v-if="item.value > 1"
+                        />
+                      </td>
+                    </tr>
+                  </tbody>
+                </q-markup-table>
+              </div>
+              <div class="col-12 col-sm-6">
+                <q-markup-table flat bordered>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Total Bookings in {{ selectedMonth }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr v-for="(item, idx) in bookingsThisMonth" :key="idx">
+                      <td>{{ item.day }} {{ selectedMonth }}</td>
+                      <td>
+                        {{ item.value }}
+                      </td>
+                    </tr>
+                  </tbody>
+                </q-markup-table>
+              </div>
+            </div>
           </q-card-section>
         </q-card>
       </div>
@@ -196,6 +249,28 @@ export default {
     //   return [];
     // },
 
+    bookingsThisMonth() {
+      if (this.selectedMonth) {
+        let data = [];
+
+        for (let i = 0; i < this.daysInSelectedMonth; i++)
+          data.push({ day: i + 1, value: 0 });
+
+        this.bookings
+          .filter(
+            booking =>
+              new moment(booking.checkIn).month() == this.selectedMonthValue
+          )
+          .forEach(booking => {
+            let date = new moment(booking.checkIn);
+            data[date.date()].value++;
+          });
+
+        return data;
+      }
+      return [];
+    },
+
     daysInSelectedMonth() {
       return new moment(this.selectedMonth, "MMM").daysInMonth();
     },
@@ -237,6 +312,22 @@ export default {
 
     roomsLabels() {
       return this.rooms.map(r => r.label);
+    },
+
+    roomOptions() {
+      return this.rooms.map(r => ({ label: "Room " + r.label, value: r._id }));
+    },
+
+    monthOptions() {
+      return this.months.map(m => ({ label: m, value: m }));
+    },
+
+    roomIds() {
+      return this.rooms.map(r => r._id);
+    },
+
+    selectedRoomName() {
+      return this.roomsLabels[this.roomIds.indexOf(this.selectedRoom)];
     }
   },
 
