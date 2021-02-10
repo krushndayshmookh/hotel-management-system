@@ -14,8 +14,8 @@
       </div>
     </q-card-section>
     <q-separator />
-    <q-card-section>
-      <div class="text-center video-container">
+    <q-card-section class="q-px-none">
+      <div class="text-center video-container flex flex-center">
         <video ref="webcam" autoplay playsinline muted />
       </div>
     </q-card-section>
@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import adapter from "webrtc-adapter";
+import "webrtc-adapter";
 
 export default {
   data() {
@@ -53,7 +53,7 @@ export default {
         audio: false,
         video: {
           facingMode: "environment",
-          width: 500,
+          width: 375,
           height: 375
         }
       };
@@ -99,7 +99,7 @@ export default {
               }
             : null;
 
-        const blob = await this.imageCapture
+        await this.imageCapture
           .takePhoto(photoSettings)
           .then(blob => {
             // console.log('Took photo:', blob)
@@ -122,8 +122,10 @@ export default {
 <style lang="scss" scoped>
 .video-container,
 video {
-  width: 500px;
+  width: 375px;
   height: 375px;
   // border: 1px solid blue;
+  margin-left:auto;
+  margin-right:auto;
 }
 </style>
