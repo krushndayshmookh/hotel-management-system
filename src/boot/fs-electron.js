@@ -14,11 +14,11 @@ const $fs = {
 
     let fileName = now.format("HH-mm-ss") + "_" + roomId + ".png";
 
-    this.aadharFilePath = directory + "/" + fileName;
+    aadharFilePath = directory + "/" + fileName;
 
     let fileData = new Int8Array(await blob.arrayBuffer());
 
-    fs.outputFileSync(this.aadharFilePath, fileData);
+    fs.outputFileSync(aadharFilePath, fileData);
   }
 };
 
