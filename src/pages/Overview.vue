@@ -67,9 +67,6 @@
 </template>
 
 <script>
-import moment from "moment-timezone";
-import fs from "fs-extra";
-
 export default {
   name: "PageOverview",
 
@@ -169,21 +166,7 @@ export default {
     },
 
     async handleCapture(blob) {
-      let now = new moment.tz("Asia/Kolkata");
-
-      let directory =
-        this.$q.electron.remote.app.getPath("userData") +
-        "/Root-HMS/images/aadhar/" +
-        now.format("YYYY-MM-DD");
-
-      let fileName =
-        now.format("HH-mm-ss") + "_" + this.selectedRoom._id + ".png";
-
-      this.aadharFilePath = directory + "/" + fileName;
-
-      let fileData = new Int8Array(await blob.arrayBuffer());
-
-      fs.outputFileSync(this.aadharFilePath, fileData);
+      this.$fs.writeFile(this.selectedRoom._id, blob);
 
       this.captureDialog = false;
 
