@@ -6,13 +6,13 @@
           <div class="text-h4">{{ hotel.name }}</div>
 
           <div class="summary text-center q-gutter-sm q-mt-md">
-            <q-badge color="green-7">
+            <q-badge color="green-7" class="text-body1">
               Occupied: {{ roomCounts.occupied }}
             </q-badge>
             <!-- <q-badge color="grey-9">
               Unavailable: {{ roomCounts.unavailable }}
             </q-badge> -->
-            <q-badge color="primary">Total: {{ roomCounts.total }}</q-badge>
+            <!-- <q-badge color="primary">Total: {{ roomCounts.total }}</q-badge> -->
           </div>
         </div>
       </q-img>
