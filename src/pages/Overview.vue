@@ -60,7 +60,7 @@
       <BillCard v-bind="billData" />
     </q-dialog>
 
-    <q-dialog v-model="captureDialog">
+    <q-dialog v-model="captureDialog" :maximized="$q.screen.lt.sm">
       <ImageCapture @capture="handleCapture" />
     </q-dialog>
   </q-page>
