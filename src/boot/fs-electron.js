@@ -14,7 +14,7 @@ const $fs = {
 
     let fileName = now.format("HH-mm-ss") + "_" + roomId + ".png";
 
-    aadharFilePath = directory + "/" + fileName;
+    let aadharFilePath = directory + "/" + fileName;
 
     let fileData = new Int8Array(await blob.arrayBuffer());
 
