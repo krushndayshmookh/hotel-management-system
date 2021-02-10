@@ -254,7 +254,7 @@ export default {
         let data = [];
 
         for (let i = 0; i < this.daysInSelectedMonth; i++)
-          data.push({ day: i + 1, value: 0 });
+          data.push({ day: i, value: 0 });
 
         this.bookings
           .filter(
@@ -284,7 +284,7 @@ export default {
         let data = [];
 
         for (let i = 0; i < this.daysInSelectedMonth; i++)
-          data.push({ day: i + 1, value: 0 });
+          data.push({ day: i, value: 0 });
 
         this.bookings
           .filter(
