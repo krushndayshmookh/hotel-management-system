@@ -56,7 +56,7 @@
         </q-card>
       </div>
 
-      <div class="col-12 col-md-6">
+      <!-- <div class="col-12 col-md-6">
         <q-card>
           <q-card-section>
             <div class="text-h6">Bookings in {{ selectedMonth }}</div>
@@ -95,13 +95,12 @@
               autoresize
             >
               <la-bar prop="value"></la-bar>
-              <!-- <la-y-axis></la-y-axis> -->
               <la-x-axis prop="label"></la-x-axis>
               <la-tooltip></la-tooltip>
             </la-cartesian>
           </q-card-section>
         </q-card>
-      </div>
+      </div> -->
     </div>
   </q-page>
 </template>
@@ -141,61 +140,61 @@ export default {
   },
 
   computed: {
-    bookingsByMonth() {
-      let data = [
-        { label: "Jan", value: 0 },
-        { label: "Feb", value: 0 },
-        { label: "Mar", value: 0 },
-        { label: "Apr", value: 0 },
-        { label: "May", value: 0 },
-        { label: "Jun", value: 0 },
-        { label: "Jul", value: 0 },
-        { label: "Aug", value: 0 },
-        { label: "Sep", value: 0 },
-        { label: "Oct", value: 0 },
-        { label: "Nov", value: 0 },
-        { label: "Dec", value: 0 }
-      ];
+    // bookingsByMonth() {
+    //   let data = [
+    //     { label: "Jan", value: 0 },
+    //     { label: "Feb", value: 0 },
+    //     { label: "Mar", value: 0 },
+    //     { label: "Apr", value: 0 },
+    //     { label: "May", value: 0 },
+    //     { label: "Jun", value: 0 },
+    //     { label: "Jul", value: 0 },
+    //     { label: "Aug", value: 0 },
+    //     { label: "Sep", value: 0 },
+    //     { label: "Oct", value: 0 },
+    //     { label: "Nov", value: 0 },
+    //     { label: "Dec", value: 0 }
+    //   ];
 
-      this.bookings.forEach(booking => {
-        let date = new moment(booking.checkIn);
-        data[date.month()].value++;
-      });
+    //   this.bookings.forEach(booking => {
+    //     let date = new moment(booking.checkIn);
+    //     data[date.month()].value++;
+    //   });
 
-      return data;
-    },
+    //   return data;
+    // },
 
-    bookingsThisMonth() {
-      if (this.selectedMonth) {
-        let data = {};
+    // bookingsThisMonth() {
+    //   if (this.selectedMonth) {
+    //     let data = {};
 
-        let dot = {};
+    //     let dot = {};
 
-        this.roomsLabels.forEach(r => (dot[r] = 0));
+    //     this.roomsLabels.forEach(r => (dot[r] = 0));
 
-        for (let i = 0; i < this.daysInSelectedMonth; i++)
-          data[i + 1] = _.cloneDeep(dot);
+    //     for (let i = 0; i < this.daysInSelectedMonth; i++)
+    //       data[i + 1] = _.cloneDeep(dot);
 
-        this.bookings
-          .filter(
-            booking =>
-              new moment(booking.checkIn).month() == this.selectedMonthValue
-          )
-          .forEach(booking => {
-            let date = new moment(booking.checkIn);
-            let roomLabel = this.roomsLabels[this.roomsMap[booking.room]];
-            data[date.date()][roomLabel]++;
-          });
+    //     this.bookings
+    //       .filter(
+    //         booking =>
+    //           new moment(booking.checkIn).month() == this.selectedMonthValue
+    //       )
+    //       .forEach(booking => {
+    //         let date = new moment(booking.checkIn);
+    //         let roomLabel = this.roomsLabels[this.roomsMap[booking.room]];
+    //         data[date.date()][roomLabel]++;
+    //       });
 
-        data = Object.keys(data).map(day => ({
-          day,
-          ...data[day]
-        }));
+    //     data = Object.keys(data).map(day => ({
+    //       day,
+    //       ...data[day]
+    //     }));
 
-        return data;
-      }
-      return [];
-    },
+    //     return data;
+    //   }
+    //   return [];
+    // },
 
     daysInSelectedMonth() {
       return new moment(this.selectedMonth, "MMM").daysInMonth();
