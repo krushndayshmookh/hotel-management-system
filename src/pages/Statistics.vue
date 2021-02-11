@@ -73,7 +73,7 @@
                       v-for="(item, idx) in bookingsByRoomAndMonth"
                       :key="idx"
                     >
-                      <td>{{ item.day }} {{ selectedMonth }}</td>
+                      <td>{{ item.day + 1 }} {{ selectedMonth }}</td>
                       <td>
                         {{ item.value }}
                         <q-icon
@@ -96,7 +96,7 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, idx) in bookingsThisMonth" :key="idx">
-                      <td>{{ item.day }} {{ selectedMonth }}</td>
+                      <td>{{ item.day + 1 }} {{ selectedMonth }}</td>
                       <td>
                         {{ item.value }}
                       </td>
