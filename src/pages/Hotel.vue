@@ -1,6 +1,7 @@
 <template>
   <q-page padding>
     <div class="q-gutter-md" v-if="hotel">
+      <q-btn flat icon="keyboard_arrow_left" label="back" @click="$router.back()"/>
       <q-card>
         <q-card-section>
           <div class="text-h6">{{ hotel.name }}</div>
@@ -10,7 +11,7 @@
 
       <div>
         <div class="row q-col-gutter-md">
-          <div class="col-8">
+          <div class="col-12 col-md-8">
             <q-card>
               <q-card-section>
                 <div class="text-h6">
@@ -34,12 +35,17 @@
                     >
                       <q-item-section>
                         <q-item-label>{{ manager.name }}</q-item-label>
-                        <q-item-label caption>{{ manager.username }}</q-item-label>
+                        <q-item-label caption>
+                          {{ manager.username }}
+                        </q-item-label>
+                        <!-- <q-item-label caption>
+                          {{ manager.password }}
+                        </q-item-label> -->
                       </q-item-section>
 
-                      <q-item-section side>
+                      <!-- <q-item-section side>
                         <q-btn flat round icon="edit" />
-                      </q-item-section>
+                      </q-item-section> -->
                     </q-item>
                   </q-list>
                 </q-card-section>
@@ -50,7 +56,12 @@
                     <q-item v-for="viewer in hotel.viewers" :key="viewer._id">
                       <q-item-section>
                         <q-item-label>{{ viewer.name }}</q-item-label>
-                        <q-item-label caption>{{ viewer.username }}</q-item-label>
+                        <q-item-label caption>
+                          {{ viewer.username }}
+                        </q-item-label>
+                        <!-- <q-item-label caption>
+                          {{ viewer.password }}
+                        </q-item-label> -->
                       </q-item-section>
 
                       <!-- <q-item-section side>
@@ -62,11 +73,11 @@
               </q-card-section>
             </q-card>
           </div>
-          <div class="col-4">
+          <div class="col-12 col-md-4">
             <q-card>
               <q-card-section>
                 <div class="text-h6">
-                  Rooms &amp; Floors
+                  Rooms
                   <!-- <q-btn
               class="float-right q-ml-sm"
               color="primary"
@@ -121,8 +132,8 @@
       </div>
     </div>
 
-    <q-dialog v-model="showAddUserForm">
-      <q-card style="min-width: 500px">
+    <q-dialog v-model="showAddUserForm" :maximized="$q.screen.lt.md">
+      <q-card style="min-width: 300px">
         <q-card-section class="row items-center">
           <div class="text-h6 items-center">Add User</div>
           <q-space />
@@ -357,7 +368,13 @@ export default {
     },
 
     saveUser() {
-      let { userName, userUsername, userType, userPassword, userPin } = this.$refs;
+      let {
+        userName,
+        userUsername,
+        userType,
+        userPassword,
+        userPin
+      } = this.$refs;
       userName.validate();
       userUsername.validate();
       userType.validate();

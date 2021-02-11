@@ -5,7 +5,7 @@
     </div>
     <div class="row q-col-gutter-md">
       <div
-        class="col-4 col-sm-3 col-md-2"
+        class="col-12 col-sm-4 col-md-3"
         v-for="hotel in hotels"
         :key="hotel._id"
       >
@@ -17,10 +17,10 @@
           <q-separator />
 
           <q-card-section class="row">
-            <!-- <div class="col">
-              <div class="text-h4">{{ hotel.rooms.length }}</div>
+            <div class="col">
+              <div class="text-h4">{{ hotel.floors[0].rooms.length }}</div>
               <div class="text-body1">Rooms</div>
-            </div> -->
+            </div>
             <div class="col">
               <div class="text-h4">{{ hotel.managers.length }}</div>
               <div class="text-body1">Managers</div>
@@ -29,10 +29,11 @@
           <q-separator />
           <q-card-actions>
             <q-btn
-              flat
+              unelevated
               class="full-width"
               :to="'/hotels/' + hotel._id"
               label="View"
+              color="primary"
             />
           </q-card-actions>
         </q-card>
