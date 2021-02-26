@@ -1,7 +1,12 @@
 <template>
   <q-page padding>
     <div class="q-gutter-md" v-if="hotel">
-      <q-btn flat icon="keyboard_arrow_left" label="back" @click="$router.back()"/>
+      <q-btn
+        flat
+        icon="keyboard_arrow_left"
+        label="back"
+        @click="$router.back()"
+      />
       <q-card>
         <q-card-section>
           <div class="text-h6">{{ hotel.name }}</div>
@@ -113,16 +118,10 @@
                 <q-separator vertical></q-separator>
                 <q-card-section class="q-pa-none col">
                   <q-list>
-                    <q-item-label header>Rooms</q-item-label>
-                    <q-item v-for="room in rooms" :key="room._id">
-                      <q-item-section>
-                        <q-item-label>{{ room.label }}</q-item-label>
-                      </q-item-section>
-
-                      <!-- <q-item-section side>
-                  <q-btn flat round icon="edit" />
-                </q-item-section> -->
-                    </q-item>
+                    <q-item-label header
+                      >Number of Rooms: {{ hotel.floors[0].rooms.length }}
+                    </q-item-label>
+                    <div class="text-h6"></div>
                   </q-list>
                 </q-card-section>
               </q-card-section>
@@ -148,7 +147,7 @@
             label="Name"
             v-model="newUser.name"
             ref="userName"
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -160,11 +159,11 @@
             ref="userType"
             :options="[
               { label: 'Manager', value: 'manager' },
-              { label: 'Viewer', value: 'viewer' }
+              { label: 'Viewer', value: 'viewer' },
             ]"
             map-options
             emit-value
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -174,7 +173,7 @@
             label="Username"
             v-model="newUser.username"
             ref="userUsername"
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -184,7 +183,7 @@
             label="Password"
             v-model="newUser.password"
             ref="userPassword"
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -194,7 +193,7 @@
             label="PIN"
             v-model="newUser.pin"
             ref="userPin"
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -224,7 +223,7 @@
             label="Label"
             v-model="newFloor.label"
             ref="floorLabel"
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -235,7 +234,7 @@
             v-model="newFloor.order"
             ref="floorOrder"
             type="number"
-            :rules="[v => v >= 0]"
+            :rules="[(v) => v >= 0]"
             lazy-rules
             hide-bottom-space
           />
@@ -265,7 +264,7 @@
             label="Label"
             v-model="newRoom.label"
             ref="roomLabel"
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -278,7 +277,7 @@
             :options="floorOptions"
             map-options
             emit-value
-            :rules="[v => !!v]"
+            :rules="[(v) => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -306,35 +305,35 @@ export default {
         type: null,
         username: null,
         password: null,
-        pin: null
+        pin: null,
       },
 
       showAddFloorForm: false,
       newFloor: {
         label: null,
-        order: 0
+        order: 0,
       },
 
       showAddRoomForm: false,
       newRoom: {
         label: null,
-        floor: null
+        floor: null,
       },
 
       hotel: null,
 
-      floors: []
+      floors: [],
     };
   },
 
   computed: {
     floorOptions() {
-      return this.hotel.floors.map(f => ({ value: f._id, label: f.label }));
+      return this.hotel.floors.map((f) => ({ value: f._id, label: f.label }));
     },
 
     rooms() {
       return this.hotel.floors.reduce((r, f) => r.concat(f.rooms), []);
-    }
+    },
   },
 
   created() {
@@ -348,14 +347,14 @@ export default {
       this.$q.loading.show();
       this.$axios
         .get("/hotels/" + this.hotelid)
-        .then(response => {
+        .then((response) => {
           this.hotel = response.data;
         })
-        .catch(err => {
+        .catch((err) => {
           console.error(err);
           this.$q.notify({
             type: "negative",
-            message: "Error occured."
+            message: "Error occured.",
           });
         })
         .finally(() => {
@@ -373,7 +372,7 @@ export default {
         userUsername,
         userType,
         userPassword,
-        userPin
+        userPin,
       } = this.$refs;
       userName.validate();
       userUsername.validate();
@@ -392,15 +391,15 @@ export default {
         this.$q.loading.show();
         this.$axios
           .post("/hotels/" + this.hotelid + "/users", this.newUser)
-          .then(response => {
+          .then((response) => {
             this.showAddUserForm = false;
             this.fetchHotel();
           })
-          .catch(err => {
+          .catch((err) => {
             console.error(err);
             this.$q.notify({
               type: "negative",
-              message: "Error occured."
+              message: "Error occured.",
             });
           })
           .finally(() => {
@@ -424,15 +423,15 @@ export default {
         this.$q.loading.show();
         this.$axios
           .post("/hotels/" + this.hotelid + "/floors", this.newFloor)
-          .then(response => {
+          .then((response) => {
             this.showAddFloorForm = false;
             this.fetchFloors();
           })
-          .catch(err => {
+          .catch((err) => {
             console.error(err);
             this.$q.notify({
               type: "negative",
-              message: "Error occured."
+              message: "Error occured.",
             });
           })
           .finally(() => {
@@ -456,22 +455,22 @@ export default {
         this.$q.loading.show();
         this.$axios
           .post("/hotels/" + this.hotelid + "/rooms", this.newRoom)
-          .then(response => {
+          .then((response) => {
             this.showAddRoomForm = false;
             this.fetchRooms();
           })
-          .catch(err => {
+          .catch((err) => {
             console.error(err);
             this.$q.notify({
               type: "negative",
-              message: "Error occured."
+              message: "Error occured.",
             });
           })
           .finally(() => {
             this.$q.loading.hide();
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
