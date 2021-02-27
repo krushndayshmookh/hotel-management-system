@@ -19,6 +19,30 @@
                   Number of Rooms: {{ hotel.floors[0].rooms.length }}
                 </div>
               </q-card-section>
+
+              <q-card-section>
+                <div class="row q-col-gutter-md">
+                  <div class="col">
+                    <q-btn
+                      class="full-width"
+                      color="green"
+                      icon="edit"
+                      label="Edit Hotel"
+                      @click="editHotel"
+                    />
+                  </div>
+                  <div class="col">
+                    <q-btn
+                      flat
+                      class="full-width"
+                      color="negative"
+                      icon="delete"
+                      label="Delete Hotel"
+                      @click="deleteHotel"
+                    />
+                  </div>
+                </div>
+              </q-card-section>
             </q-card>
           </div>
           <div class="col-12 col-md-8">
@@ -30,8 +54,9 @@
                     class="float-right"
                     color="primary"
                     @click="displayNewUserForm"
-                    >Add User</q-btn
                   >
+                    Add User
+                  </q-btn>
                 </div>
               </q-card-section>
               <q-separator></q-separator>
@@ -53,9 +78,24 @@
                         </q-item-label> -->
                       </q-item-section>
 
-                      <!-- <q-item-section side>
-                        <q-btn flat round icon="edit" />
-                      </q-item-section> -->
+                      <q-item-section side>
+                        <div>
+                          <q-btn
+                            flat
+                            round
+                            icon="edit"
+                            color="green"
+                            @click="editUser(manager)"
+                          />
+                          <q-btn
+                            flat
+                            round
+                            icon="delete"
+                            color="negative"
+                            @click="deleteUser(manager)"
+                          />
+                        </div>
+                      </q-item-section>
                     </q-item>
                   </q-list>
                 </q-card-section>
@@ -74,9 +114,24 @@
                         </q-item-label> -->
                       </q-item-section>
 
-                      <!-- <q-item-section side>
-                  <q-btn flat round icon="edit" />
-                </q-item-section> -->
+                      <q-item-section side>
+                        <div>
+                          <q-btn
+                            flat
+                            round
+                            icon="edit"
+                            color="green"
+                            @click="editUser(viewer)"
+                          />
+                          <q-btn
+                            flat
+                            round
+                            icon="delete"
+                            color="negative"
+                            @click="deleteUser(viewer)"
+                          />
+                        </div>
+                      </q-item-section>
                     </q-item>
                   </q-list>
                 </q-card-section>
@@ -138,7 +193,7 @@
     <q-dialog v-model="showAddUserForm" :maximized="$q.screen.lt.md">
       <q-card style="min-width: 300px">
         <q-card-section class="row items-center">
-          <div class="text-h6 items-center">Add User</div>
+          <div class="text-h6 items-center">User Details</div>
           <q-space />
           <q-btn icon="close" flat round dense v-close-popup />
         </q-card-section>
@@ -149,7 +204,7 @@
           <q-input
             outlined
             label="Name"
-            v-model="newUser.name"
+            v-model="selectedUser.name"
             ref="userName"
             :rules="[v => !!v]"
             lazy-rules
@@ -159,7 +214,7 @@
           <q-select
             outlined
             label="Type"
-            v-model="newUser.type"
+            v-model="selectedUser.type"
             ref="userType"
             :options="[
               { label: 'Manager', value: 'manager' },
@@ -175,7 +230,7 @@
           <q-input
             outlined
             label="Username"
-            v-model="newUser.username"
+            v-model="selectedUser.username"
             ref="userUsername"
             :rules="[v => !!v]"
             lazy-rules
@@ -185,7 +240,7 @@
           <q-input
             outlined
             label="Password"
-            v-model="newUser.password"
+            v-model="selectedUser.password"
             ref="userPassword"
             :rules="[v => !!v]"
             lazy-rules
@@ -195,7 +250,7 @@
           <q-input
             outlined
             label="PIN"
-            v-model="newUser.pin"
+            v-model="selectedUser.pin"
             ref="userPin"
             :rules="[v => !!v]"
             lazy-rules
@@ -211,7 +266,52 @@
       </q-card>
     </q-dialog>
 
-    <q-dialog v-model="showAddFloorForm">
+    <q-dialog v-model="editHotelDialog" :maximized="$q.screen.lt.md">
+      <q-card style="min-width: 300px">
+        <q-card-section class="row items-center">
+          <div class="text-h6 items-center">Hotel Details</div>
+          <q-space />
+          <q-btn icon="close" flat round dense v-close-popup />
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-section class="column q-col-gutter-md">
+          <q-input
+            outlined
+            label="Name"
+            v-model="hotel.name"
+            ref="hotelName"
+            :rules="[v => !!v]"
+            lazy-rules
+            hide-bottom-space
+          />
+          <q-input
+            outlined
+            label="Owner"
+            v-model="hotel.owner"
+            ref="hotelOwner"
+            :rules="[v => !!v]"
+            lazy-rules
+            hide-bottom-space
+          />
+          <q-input
+            outlined
+            label="Banner"
+            v-model="hotel.banner"
+            ref="hotelBanner"
+          />
+        </q-card-section>
+
+        <q-separator />
+
+        <q-card-actions align="right">
+          <q-btn flat color="primary" @click="saveHotel">Save</q-btn>
+        </q-card-actions>
+      </q-card>
+    </q-dialog>
+
+    <!-- <q-dialog v-model="showAddFloorForm">
       <q-card style="min-width: 500px">
         <q-card-section class="row items-center">
           <div class="text-h6 items-center">Add Floor</div>
@@ -250,9 +350,9 @@
           <q-btn flat color="primary" @click="saveFloor">Save</q-btn>
         </q-card-actions>
       </q-card>
-    </q-dialog>
+    </q-dialog> -->
 
-    <q-dialog v-model="showAddRoomForm">
+    <!-- <q-dialog v-model="showAddRoomForm">
       <q-card style="min-width: 500px">
         <q-card-section class="row items-center">
           <div class="text-h6 items-center">Add Room</div>
@@ -293,7 +393,7 @@
           <q-btn flat color="primary" @click="saveRoom">Save</q-btn>
         </q-card-actions>
       </q-card>
-    </q-dialog>
+    </q-dialog> -->
   </q-page>
 </template>
 
@@ -304,6 +404,7 @@ export default {
   data() {
     return {
       showAddUserForm: false,
+
       newUser: {
         name: null,
         type: null,
@@ -311,6 +412,8 @@ export default {
         password: null,
         pin: null
       },
+
+      selectedUser: null,
 
       showAddFloorForm: false,
       newFloor: {
@@ -326,7 +429,9 @@ export default {
 
       hotel: null,
 
-      floors: []
+      floors: [],
+
+      editHotelDialog: false
     };
   },
 
@@ -342,6 +447,8 @@ export default {
 
   created() {
     this.fetchHotel();
+
+    this.selectedUser = this.newUser;
     // this.fetchFloors();
     // this.fetchRooms();
   },
@@ -392,9 +499,16 @@ export default {
         userPin.hasError;
 
       if (!hasError) {
+        let isEdit = !!this.selectedUser._id;
+
         this.$q.loading.show();
-        this.$axios
-          .post("/hotels/" + this.hotelid + "/users", this.newUser)
+        this.$axios({
+          url: isEdit
+            ? "/users/" + this.selectedUser._id
+            : "/hotels/" + this.hotelid + "/users",
+          method: isEdit ? "PUT" : "POST",
+          data: this.selectedUser
+        })
           .then(response => {
             this.showAddUserForm = false;
             this.fetchHotel();
@@ -413,23 +527,64 @@ export default {
     },
 
     displayNewFloorForm() {
+      this.selectedUser = { ...this.newUser };
       this.showAddFloorForm = true;
     },
 
-    saveFloor() {
-      let { floorLabel, floorOrder } = this.$refs;
-      floorLabel.validate();
-      floorOrder.validate();
+    editHotel() {
+      this.editHotelDialog = true;
+    },
 
-      let hasError = floorLabel.hasError || floorOrder.hasError;
+    deleteHotel() {
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Would you like to delete this hotel?",
+          cancel: true,
+          persistent: true,
+          ok: {
+            label: "delete",
+            color: "negative",
+            flat: true
+          }
+        })
+        .onOk(() => {
+          this.$q.loading.show();
+          this.$axios
+            .delete("/hotels/" + this.hotelid)
+            .then(response => {
+              this.$q.notify({
+                message: "Deleted."
+              });
+              this.$router.back();
+            })
+            .catch(err => {
+              console.error(err);
+              this.$q.notify({
+                type: "negative",
+                message: "Error occured."
+              });
+            })
+            .finally(() => {
+              this.$q.loading.hide();
+            });
+        });
+    },
+
+    saveHotel() {
+      let { hotelName, hotelOwner, hotelImage } = this.$refs;
+      hotelName.validate();
+      hotelOwner.validate();
+
+      let hasError = hotelName.hasError || hotelOwner.hasError;
 
       if (!hasError) {
         this.$q.loading.show();
         this.$axios
-          .post("/hotels/" + this.hotelid + "/floors", this.newFloor)
+          .put("/hotels/" + this.hotelid, this.hotel)
           .then(response => {
-            this.showAddFloorForm = false;
-            this.fetchFloors();
+            this.editHotelDialog = false;
+            this.fetchHotel();
           })
           .catch(err => {
             console.error(err);
@@ -443,38 +598,107 @@ export default {
           });
       }
     },
+
+    editUser(user) {
+      this.selectedUser = { ...user };
+      this.showAddUserForm = true;
+    },
+
+    deleteUser(user) {
+      this.$q
+        .dialog({
+          title: "Confirm",
+          message: "Would you like to delete this user?",
+          cancel: true,
+          persistent: true,
+          ok: {
+            label: "delete",
+            color: "negative",
+            flat: true
+          }
+        })
+        .onOk(() => {
+          this.$q.loading.show();
+          this.$axios
+            .delete("/users/" + user._id)
+            .then(response => {
+              this.$q.notify({
+                message: "Deleted."
+              });
+              this.fetchHotel();
+            })
+            .catch(err => {
+              console.error(err);
+              this.$q.notify({
+                type: "negative",
+                message: "Error occured."
+              });
+            })
+            .finally(() => {
+              this.$q.loading.hide();
+            });
+        });
+    },
+
+    // saveFloor() {
+    //   let { floorLabel, floorOrder } = this.$refs;
+    //   floorLabel.validate();
+    //   floorOrder.validate();
+
+    //   let hasError = floorLabel.hasError || floorOrder.hasError;
+
+    //   if (!hasError) {
+    //     this.$q.loading.show();
+    //     this.$axios
+    //       .post("/hotels/" + this.hotelid + "/floors", this.newFloor)
+    //       .then(response => {
+    //         this.showAddFloorForm = false;
+    //         this.fetchFloors();
+    //       })
+    //       .catch(err => {
+    //         console.error(err);
+    //         this.$q.notify({
+    //           type: "negative",
+    //           message: "Error occured."
+    //         });
+    //       })
+    //       .finally(() => {
+    //         this.$q.loading.hide();
+    //       });
+    //   }
+    // },
 
     displayNewRoomForm() {
       this.showAddRoomForm = true;
-    },
-
-    saveRoom() {
-      let { roomLabel, roomFloor } = this.$refs;
-      roomLabel.validate();
-      roomFloor.validate();
-
-      let hasError = roomLabel.hasError || roomFloor.hasError;
-
-      if (!hasError) {
-        this.$q.loading.show();
-        this.$axios
-          .post("/hotels/" + this.hotelid + "/rooms", this.newRoom)
-          .then(response => {
-            this.showAddRoomForm = false;
-            this.fetchRooms();
-          })
-          .catch(err => {
-            console.error(err);
-            this.$q.notify({
-              type: "negative",
-              message: "Error occured."
-            });
-          })
-          .finally(() => {
-            this.$q.loading.hide();
-          });
-      }
     }
+
+    // saveRoom() {
+    //   let { roomLabel, roomFloor } = this.$refs;
+    //   roomLabel.validate();
+    //   roomFloor.validate();
+
+    //   let hasError = roomLabel.hasError || roomFloor.hasError;
+
+    //   if (!hasError) {
+    //     this.$q.loading.show();
+    //     this.$axios
+    //       .post("/hotels/" + this.hotelid + "/rooms", this.newRoom)
+    //       .then(response => {
+    //         this.showAddRoomForm = false;
+    //         this.fetchRooms();
+    //       })
+    //       .catch(err => {
+    //         console.error(err);
+    //         this.$q.notify({
+    //           type: "negative",
+    //           message: "Error occured."
+    //         });
+    //       })
+    //       .finally(() => {
+    //         this.$q.loading.hide();
+    //       });
+    //   }
+    // }
   }
 };
 </script>
