@@ -7,15 +7,20 @@
         label="back"
         @click="$router.back()"
       />
-      <q-card>
-        <q-card-section>
-          <div class="text-h6">{{ hotel.name }}</div>
-          <div class="text-subtitle1">Owner: {{ hotel.owner }}</div>
-        </q-card-section>
-      </q-card>
 
       <div>
         <div class="row q-col-gutter-md">
+          <div class="col-12 col-md-4">
+            <q-card>
+              <q-card-section>
+                <div class="text-h6">{{ hotel.name }}</div>
+                <div class="text-subtitle1">Owner: {{ hotel.owner }}</div>
+                <div class="text-subtitle1">
+                  Number of Rooms: {{ hotel.floors[0].rooms.length }}
+                </div>
+              </q-card-section>
+            </q-card>
+          </div>
           <div class="col-12 col-md-8">
             <q-card>
               <q-card-section>
@@ -78,43 +83,42 @@
               </q-card-section>
             </q-card>
           </div>
-          <div class="col-12 col-md-4">
+          <!-- <div class="col-12 col-md-4">
             <q-card>
               <q-card-section>
                 <div class="text-h6">
                   Rooms
-                  <!-- <q-btn
-              class="float-right q-ml-sm"
-              color="primary"
-              @click="displayNewRoomForm"
-            >
-              Add Room
-            </q-btn> -->
-                  <!-- <q-btn
-              class="float-right"
-              color="primary"
-              @click="displayNewFloorForm"
-            >
-              Add Floor
-            </q-btn> -->
+                  <q-btn
+                    class="float-right q-ml-sm"
+                    color="primary"
+                    @click="displayNewRoomForm"
+                  >
+                    Add Room </q-btn
+                  ><q-btn
+                    class="float-right"
+                    color="primary"
+                    @click="displayNewFloorForm"
+                  >
+                    Add Floor
+                  </q-btn>
                 </div>
               </q-card-section>
               <q-separator></q-separator>
               <q-card-section horizontal class="q-pa-none">
-                <!-- <q-card-section class="q-pa-none col">
-            <q-list>
-              <q-item-label header>Floors</q-item-label>
-              <q-item v-for="floor in hotel.floors" :key="floor._id">
-                <q-item-section>
-                  <q-item-label>{{ floor.label }}</q-item-label>
-                </q-item-section>
+                <q-card-section class="q-pa-none col">
+                  <q-list>
+                    <q-item-label header>Floors</q-item-label>
+                    <q-item v-for="floor in hotel.floors" :key="floor._id">
+                      <q-item-section>
+                        <q-item-label>{{ floor.label }}</q-item-label>
+                      </q-item-section>
 
-                !-- <q-item-section side>
-                  <q-btn flat round icon="edit" />
-                </q-item-section> --
-              </q-item>
-            </q-list>
-          </q-card-section> -->
+                      <q-item-section side>
+                        <q-btn flat round icon="edit" />
+                      </q-item-section>
+                    </q-item>
+                  </q-list>
+                </q-card-section>
                 <q-separator vertical></q-separator>
                 <q-card-section class="q-pa-none col">
                   <q-list>
@@ -126,7 +130,7 @@
                 </q-card-section>
               </q-card-section>
             </q-card>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
@@ -147,7 +151,7 @@
             label="Name"
             v-model="newUser.name"
             ref="userName"
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -159,11 +163,11 @@
             ref="userType"
             :options="[
               { label: 'Manager', value: 'manager' },
-              { label: 'Viewer', value: 'viewer' },
+              { label: 'Viewer', value: 'viewer' }
             ]"
             map-options
             emit-value
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -173,7 +177,7 @@
             label="Username"
             v-model="newUser.username"
             ref="userUsername"
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -183,7 +187,7 @@
             label="Password"
             v-model="newUser.password"
             ref="userPassword"
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -193,7 +197,7 @@
             label="PIN"
             v-model="newUser.pin"
             ref="userPin"
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -223,7 +227,7 @@
             label="Label"
             v-model="newFloor.label"
             ref="floorLabel"
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -234,7 +238,7 @@
             v-model="newFloor.order"
             ref="floorOrder"
             type="number"
-            :rules="[(v) => v >= 0]"
+            :rules="[v => v >= 0]"
             lazy-rules
             hide-bottom-space
           />
@@ -264,7 +268,7 @@
             label="Label"
             v-model="newRoom.label"
             ref="roomLabel"
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -277,7 +281,7 @@
             :options="floorOptions"
             map-options
             emit-value
-            :rules="[(v) => !!v]"
+            :rules="[v => !!v]"
             lazy-rules
             hide-bottom-space
           />
@@ -305,35 +309,35 @@ export default {
         type: null,
         username: null,
         password: null,
-        pin: null,
+        pin: null
       },
 
       showAddFloorForm: false,
       newFloor: {
         label: null,
-        order: 0,
+        order: 0
       },
 
       showAddRoomForm: false,
       newRoom: {
         label: null,
-        floor: null,
+        floor: null
       },
 
       hotel: null,
 
-      floors: [],
+      floors: []
     };
   },
 
   computed: {
     floorOptions() {
-      return this.hotel.floors.map((f) => ({ value: f._id, label: f.label }));
+      return this.hotel.floors.map(f => ({ value: f._id, label: f.label }));
     },
 
     rooms() {
       return this.hotel.floors.reduce((r, f) => r.concat(f.rooms), []);
-    },
+    }
   },
 
   created() {
@@ -347,14 +351,14 @@ export default {
       this.$q.loading.show();
       this.$axios
         .get("/hotels/" + this.hotelid)
-        .then((response) => {
+        .then(response => {
           this.hotel = response.data;
         })
-        .catch((err) => {
+        .catch(err => {
           console.error(err);
           this.$q.notify({
             type: "negative",
-            message: "Error occured.",
+            message: "Error occured."
           });
         })
         .finally(() => {
@@ -372,7 +376,7 @@ export default {
         userUsername,
         userType,
         userPassword,
-        userPin,
+        userPin
       } = this.$refs;
       userName.validate();
       userUsername.validate();
@@ -391,15 +395,15 @@ export default {
         this.$q.loading.show();
         this.$axios
           .post("/hotels/" + this.hotelid + "/users", this.newUser)
-          .then((response) => {
+          .then(response => {
             this.showAddUserForm = false;
             this.fetchHotel();
           })
-          .catch((err) => {
+          .catch(err => {
             console.error(err);
             this.$q.notify({
               type: "negative",
-              message: "Error occured.",
+              message: "Error occured."
             });
           })
           .finally(() => {
@@ -423,15 +427,15 @@ export default {
         this.$q.loading.show();
         this.$axios
           .post("/hotels/" + this.hotelid + "/floors", this.newFloor)
-          .then((response) => {
+          .then(response => {
             this.showAddFloorForm = false;
             this.fetchFloors();
           })
-          .catch((err) => {
+          .catch(err => {
             console.error(err);
             this.$q.notify({
               type: "negative",
-              message: "Error occured.",
+              message: "Error occured."
             });
           })
           .finally(() => {
@@ -455,22 +459,22 @@ export default {
         this.$q.loading.show();
         this.$axios
           .post("/hotels/" + this.hotelid + "/rooms", this.newRoom)
-          .then((response) => {
+          .then(response => {
             this.showAddRoomForm = false;
             this.fetchRooms();
           })
-          .catch((err) => {
+          .catch(err => {
             console.error(err);
             this.$q.notify({
               type: "negative",
-              message: "Error occured.",
+              message: "Error occured."
             });
           })
           .finally(() => {
             this.$q.loading.hide();
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
