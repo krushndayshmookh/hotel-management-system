@@ -12,6 +12,8 @@
         <div class="row q-col-gutter-md">
           <div class="col-12 col-md-4">
             <q-card>
+              <q-img v-if="hotel.banner" :src="hotel.banner" />
+
               <q-card-section>
                 <div class="text-h6">{{ hotel.name }}</div>
                 <div class="text-subtitle1">Owner: {{ hotel.owner }}</div>
@@ -296,10 +298,34 @@
             hide-bottom-space
           />
           <q-input
+            hide-bottom-space
+            color="primary"
             outlined
             label="Banner"
             v-model="hotel.banner"
             ref="hotelBanner"
+          >
+            <template v-slot:append>
+              <q-spinner v-if="fileProgress" />
+              <q-btn
+                round
+                dense
+                color="primary"
+                v-else
+                icon="file_upload"
+                @click="triggerFileInput"
+              />
+            </template>
+          </q-input>
+
+          <input
+            class="hidden"
+            @input="
+              e =>
+                (imageFile = e.target.files.length ? e.target.files[0] : null)
+            "
+            type="file"
+            id="image-file"
           />
         </q-card-section>
 
@@ -398,6 +424,10 @@
 </template>
 
 <script>
+function _triggerFileInput() {
+  document.getElementById("image-file").click();
+}
+
 export default {
   props: ["hotelid"],
 
@@ -431,7 +461,9 @@ export default {
 
       floors: [],
 
-      editHotelDialog: false
+      editHotelDialog: false,
+      imageFile: null,
+      fileProgress: false
     };
   },
 
@@ -442,6 +474,12 @@ export default {
 
     rooms() {
       return this.hotel.floors.reduce((r, f) => r.concat(f.rooms), []);
+    }
+  },
+
+  watch: {
+    imageFile(newValue) {
+      if (newValue) this.uploadFile();
     }
   },
 
@@ -471,6 +509,32 @@ export default {
         .finally(() => {
           this.$q.loading.hide();
         });
+    },
+
+    uploadFile() {
+      this.fileProgress = true;
+
+      let formdata = new FormData();
+      formdata.append("image", this.imageFile);
+
+      this.$axios
+        .post(process.env.API + "/uploads", formdata, {
+          headers: {
+            "content-type": "multipart/form-data"
+          }
+        })
+        .then(response => {
+          this.hotel.banner = response.data.imageURL;
+          this.$forceUpdate();
+        })
+        .catch(err => console.error(err))
+        .finally(() => {
+          this.fileProgress = false;
+        });
+    },
+
+    triggerFileInput() {
+      _triggerFileInput();
     },
 
     displayNewUserForm() {

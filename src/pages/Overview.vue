@@ -1,11 +1,13 @@
 <template>
   <q-page>
     <div class="hotel-banner-container text-center">
-      <q-img :src="hotelLogoBanner" height="128px">
+      <q-img :src="hotel.banner || hotelLogoBanner" height="196px">
         <div class="absolute-bottom">
-          <div class="text-h4">{{ hotel.name }}</div>
+          <div class="text-h4  q-mb-md" v-if="!hotel.banner">
+            {{ hotel.name }}
+          </div>
 
-          <div class="summary text-center q-gutter-sm q-mt-md">
+          <div class="summary text-center q-gutter-sm">
             <q-badge color="green-7" class="text-body1">
               Occupied: {{ roomCounts.occupied }}
             </q-badge>
