@@ -73,7 +73,7 @@
                       v-for="(item, idx) in bookingsByRoomAndMonth"
                       :key="idx"
                     >
-                      <td>{{ item.day + 1 }} {{ selectedMonth }}</td>
+                      <td>{{ item.day }} {{ selectedMonth }}</td>
                       <td>
                         {{ item.value }}
                         <q-icon
@@ -96,7 +96,7 @@
                   </thead>
                   <tbody>
                     <tr v-for="(item, idx) in bookingsThisMonth" :key="idx">
-                      <td>{{ item.day + 1 }} {{ selectedMonth }}</td>
+                      <td>{{ item.day }} {{ selectedMonth }}</td>
                       <td>
                         {{ item.value }}
                       </td>
@@ -254,7 +254,7 @@ export default {
         let data = [];
 
         for (let i = 0; i < this.daysInSelectedMonth; i++)
-          data.push({ day: i, value: 0 });
+          data.push({ day: i + 1, value: 0 });
 
         this.bookings
           .filter(
@@ -263,7 +263,7 @@ export default {
           )
           .forEach(booking => {
             let date = new moment(booking.checkIn);
-            data[date.date()].value++;
+            data[date.date() - 1].value++;
           });
 
         return data;
@@ -284,7 +284,7 @@ export default {
         let data = [];
 
         for (let i = 0; i < this.daysInSelectedMonth; i++)
-          data.push({ day: i, value: 0 });
+          data.push({ day: i + 1, value: 0 });
 
         this.bookings
           .filter(
@@ -294,7 +294,7 @@ export default {
           )
           .forEach(booking => {
             let date = new moment(booking.checkIn);
-            data[date.date()].value++;
+            data[date.date() - 1].value++;
           });
 
         return data;
