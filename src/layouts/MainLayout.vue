@@ -75,6 +75,10 @@ const TABS = {
     {
       label: "Overview",
       to: "/overview"
+    },
+    {
+      label: "Statistics",
+      to: "/statistics"
     }
   ]
 };
