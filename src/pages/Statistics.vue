@@ -58,7 +58,7 @@
           <q-card-section>
             <div class="row q-col-gutter-md">
               <div class="col-12 col-sm-6">
-                <q-markup-table flat bordered>
+                <q-markup-table flat bordered class="big-text">
                   <thead>
                     <tr>
                       <th>Date</th>
@@ -87,7 +87,7 @@
                 </q-markup-table>
               </div>
               <div class="col-12 col-sm-6">
-                <q-markup-table flat bordered>
+                <q-markup-table flat bordered class="big-text">
                   <thead>
                     <tr>
                       <th>Date</th>
@@ -342,3 +342,13 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+.big-text {
+  tbody {
+    td {
+      font-size: 1.3em !important;
+    }
+  }
+}
+</style>
