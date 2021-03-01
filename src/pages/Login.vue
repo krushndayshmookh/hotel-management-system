@@ -43,7 +43,6 @@
 </template>
 
 <script>
-import { fetchHotel } from 'src/store/general/actions';
 export default {
   name: "PageLogin",
   data() {
@@ -64,10 +63,12 @@ export default {
             this.$store.dispatch("auth/login", response.data);
 
             const { type, hotel } = response.data.user;
+            const { bookings } = response.data;
             if (type == "admin") this.$router.push("/hotels");
             if (type == "manager" || type == "viewer") {
-              this.$store.dispatch('general/fetchHotel', hotel);
+              this.$store.dispatch("general/fetchHotel", hotel);
               this.$router.push("/overview");
+              await this.$db.resetWith({ bookings });
             }
           } else {
             // wrong password
@@ -84,9 +85,7 @@ export default {
             message: "Error occured."
           });
         });
-    },
-
-    
+    }
   }
 };
 </script>

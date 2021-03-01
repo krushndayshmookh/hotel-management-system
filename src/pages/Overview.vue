@@ -94,7 +94,9 @@ export default {
 
       floors: [],
 
-      futureSync: false
+      futureSync: false,
+
+      futureBookings: []
     };
   },
 
@@ -153,6 +155,8 @@ export default {
     connected(connectionStatus) {
       if (connectionStatus && this.futureSync) {
         this.syncHotelRooms();
+
+        this.pushBookings();
       }
     }
   },
@@ -163,6 +167,16 @@ export default {
         .put("/hotels/" + this.hotel._id + "/rooms", this.hotel)
         .then(response => {
           this.futureSync = false;
+        })
+        .catch(console.error);
+    },
+
+    pushBookings(bookings = this.futureBookings) {
+      this.$axios
+        .put("/hotels/" + this.hotel._id + "/bookings", bookings)
+        .then(response => {
+          this.futureSync = false;
+          this.futureBookings = [];
         })
         .catch(console.error);
     },
@@ -233,13 +247,20 @@ export default {
           aadhar: this.aadharFilePath
         });
 
-        await this.$db.Booking.asyncInsert({
+        let bk = await this.$db.Booking.asyncInsert({
           room: this.selectedRoom._id,
           guest: guest._id,
           checkIn: new Date(),
           rent: 0,
           aadhar: this.aadharFilePath
         });
+
+        if (this.connected) {
+          this.pushBookings([bk]);
+        } else {
+          this.futureSync = true;
+          this.futureBookings.push(bk);
+        }
 
         this.$store.dispatch("general/setOccupied", {
           roomIndex: this.roomsMap[this.selectedRoom._id],
@@ -274,6 +295,13 @@ export default {
       let checkOut = new Date();
 
       try {
+        let bk = await this.$db.Booking.asyncFindOne({
+          room: this.selectedRoom._id,
+          checkOut: {
+            $exists: false
+          }
+        });
+
         await this.$db.Booking.asyncUpdate(
           {
             room: this.selectedRoom._id,
@@ -287,6 +315,17 @@ export default {
             }
           }
         );
+
+        if (bk) {
+          bk.checkOut = checkOut;
+
+          if (this.connected) {
+            this.pushBookings([bk]);
+          } else {
+            this.futureSync = true;
+            this.futureBookings.push(bk);
+          }
+        }
 
         this.$store.dispatch("general/setOccupied", {
           roomIndex: this.roomsMap[this.selectedRoom._id],
