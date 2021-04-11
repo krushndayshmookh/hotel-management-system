@@ -1,7 +1,7 @@
 import {
   Plugins,
   FilesystemDirectory,
-  FilesystemEncoding
+  // FilesystemEncoding
 } from "@capacitor/core";
 import Vue from "vue";
 import moment from "moment-timezone";
@@ -14,31 +14,46 @@ const $fs = {
 
     let directory = "Root-HMS/images/aadhar/" + now.format("YYYY-MM-DD");
 
-    let fileName = now.format("HH-mm-ss") + "_" + roomId + ".png";
+    let fileName = now.format("HH-mm-ss") + "_" + roomId + ".jpg";
 
     let aadharFilePath = directory + "/" + fileName;
 
     try {
-      let dataString = await blob.text();
-
-      let exists = await Filesystem.stat({
+      await Filesystem.stat({
         path: directory,
         directory: FilesystemDirectory.Documents
       });
-      if (!exists)
+    } catch (e) {
+      // console.error(e);
+      console.log("Path does not exist. Creating...");
+      try {
         await Filesystem.mkdir({
           path: directory,
           directory: FilesystemDirectory.Documents,
           recursive: true
         });
+      } catch (e) {
+        console.error(e);
+        console.log("Failed to create directory.");
+      }
+    }
 
-      const result = await Filesystem.writeFile({
-        path: aadharFilePath,
-        data: dataString,
-        directory: FilesystemDirectory.Documents,
-        encoding: FilesystemEncoding.UTF8
-      });
-      console.log("Wrote file", result);
+    try {
+      let dataString;
+
+      var reader = new FileReader();
+
+      reader.onload = async function() {
+        dataString = reader.result;
+        const result = await Filesystem.writeFile({
+          path: aadharFilePath,
+          data: dataString,
+          directory: FilesystemDirectory.Documents
+        });
+        console.log("Wrote file", result);
+      };
+
+      reader.readAsDataURL(blob);
     } catch (e) {
       console.error("Unable to write file", e);
     }
