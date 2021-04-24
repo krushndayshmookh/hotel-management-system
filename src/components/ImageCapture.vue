@@ -13,13 +13,11 @@
         />
       </div>
     </q-card-section>
-    <q-separator />
-    <q-card-section class="q-px-none">
-      <div class="text-center video-container flex flex-center">
-        <video ref="webcam" autoplay playsinline muted />
-      </div>
-    </q-card-section>
-    <q-separator></q-separator>
+
+    <div class="video-container">
+      <video ref="webcam" autoplay playsinline muted />
+    </div>
+
     <q-card-section class="text-center">
       <q-btn @click="capture" label="Capture and Check In" color="primary" />
     </q-card-section>
@@ -35,7 +33,10 @@ export default {
       mediaStream: null,
       imageCapture: null,
 
-      captured: null
+      captured: null,
+
+      width: this.$q.screen.width,
+      height: this.$q.screen.height - 64 - 78
     };
   },
 
@@ -53,8 +54,8 @@ export default {
         audio: false,
         video: {
           facingMode: "environment",
-          width: 375,
-          height: 375
+          width: this.width,
+          height: this.height
         }
       };
       try {
@@ -89,8 +90,10 @@ export default {
           imageWidth,
           imageHeight
         } = await this.imageCapture.getPhotoCapabilities();
-        const width = setInRange(240, imageWidth);
-        const height = setInRange(240, imageHeight);
+        
+        const width = setInRange(this.width, imageWidth);
+        const height = setInRange(this.height, imageHeight);
+
         const photoSettings =
           width && height
             ? {
@@ -99,12 +102,10 @@ export default {
               }
             : null;
 
-        await this.imageCapture
-          .takePhoto(photoSettings)
-          .then(blob => {
-            // console.log('Took photo:', blob)
-            vm.$emit("capture", blob);
-          });
+        await this.imageCapture.takePhoto(photoSettings).then(blob => {
+          // console.log('Took photo:', blob)
+          vm.$emit("capture", blob);
+        });
       } catch (error) {
         console.log("takePhoto() error: ", error);
       }
@@ -118,14 +119,3 @@ export default {
   }
 };
 </script>
-
-<style lang="scss" scoped>
-.video-container,
-video {
-  width: 375px;
-  height: 375px;
-  // border: 1px solid blue;
-  margin-left:auto;
-  margin-right:auto;
-}
-</style>
