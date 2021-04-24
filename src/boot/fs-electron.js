@@ -12,7 +12,7 @@ const $fs = {
       "/Root-HMS/images/aadhar/" +
       now.format("YYYY-MM-DD");
 
-    let fileName = now.format("HH-mm-ss") + "_" + roomId + ".png";
+    let fileName = now.format("HH-mm-ss") + "_" + roomId + ".jpg";
 
     let aadharFilePath = directory + "/" + fileName;
 
