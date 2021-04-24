@@ -70,16 +70,16 @@
                   </thead>
                   <tbody>
                     <tr
-                      v-for="(item, idx) in bookingsByRoomAndMonth"
+                      v-for="(item, idx) in statisticsByRoomAndMonth"
                       :key="idx"
                     >
-                      <td>{{ item.day }} {{ selectedMonth }}</td>
+                      <td>{{ item._id | formatDate }}</td>
                       <td>
-                        {{ item.value }}
+                        {{ item.count }}
                         <q-icon
                           name="star"
                           color="orange"
-                          v-if="item.value > 1"
+                          v-if="item.count > 1"
                         />
                       </td>
                     </tr>
@@ -95,10 +95,10 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(item, idx) in bookingsThisMonth" :key="idx">
-                      <td>{{ item.day }} {{ selectedMonth }}</td>
+                    <tr v-for="(item, idx) in statisticsByMonth" :key="idx">
+                      <td>{{ item._id | formatDate }}</td>
                       <td>
-                        {{ item.value }}
+                        {{ item.count }}
                       </td>
                     </tr>
                   </tbody>
@@ -182,17 +182,24 @@ const MONTHS = [
 export default {
   data() {
     return {
-      bookings: [],
+      // bookings: [],
 
       now: NOW,
       months: MONTHS,
 
       selectedRoom: null,
-      selectedMonth: null
+      selectedMonth: null,
+
+      statisticsByMonth: [],
+      statisticsByRoomAndMonth: []
     };
   },
 
   computed: {
+    hotel() {
+      return this.$store.getters["general/hotel"];
+    },
+
     // bookingsByMonth() {
     //   let data = [
     //     { label: "Jan", value: 0 },
@@ -249,27 +256,27 @@ export default {
     //   return [];
     // },
 
-    bookingsThisMonth() {
-      if (this.selectedMonth) {
-        let data = [];
+    // bookingsThisMonth() {
+    //   if (this.selectedMonth) {
+    //     let data = [];
 
-        for (let i = 0; i < this.daysInSelectedMonth; i++)
-          data.push({ day: i + 1, value: 0 });
+    //     for (let i = 0; i < this.daysInSelectedMonth; i++)
+    //       data.push({ day: i + 1, value: 0 });
 
-        this.bookings
-          .filter(
-            booking =>
-              new moment(booking.checkIn).month() == this.selectedMonthValue
-          )
-          .forEach(booking => {
-            let date = new moment(booking.checkIn);
-            data[date.date() - 1].value++;
-          });
+    //     this.bookings
+    //       .filter(
+    //         booking =>
+    //           new moment(booking.checkIn).month() == this.selectedMonthValue
+    //       )
+    //       .forEach(booking => {
+    //         let date = new moment(booking.checkIn);
+    //         data[date.date() - 1].value++;
+    //       });
 
-        return data;
-      }
-      return [];
-    },
+    //     return data;
+    //   }
+    //   return [];
+    // },
 
     daysInSelectedMonth() {
       return new moment(this.selectedMonth, "MMM").daysInMonth();
@@ -279,28 +286,28 @@ export default {
       return new moment(this.selectedMonth, "MMM").month();
     },
 
-    bookingsByRoomAndMonth() {
-      if (this.selectedRoom && this.selectedMonth) {
-        let data = [];
+    // bookingsByRoomAndMonth() {
+    //   if (this.selectedRoom && this.selectedMonth) {
+    //     let data = [];
 
-        for (let i = 0; i < this.daysInSelectedMonth; i++)
-          data.push({ day: i + 1, value: 0 });
+    //     for (let i = 0; i < this.daysInSelectedMonth; i++)
+    //       data.push({ day: i + 1, value: 0 });
 
-        this.bookings
-          .filter(
-            booking =>
-              new moment(booking.checkIn).month() == this.selectedMonthValue &&
-              booking.room == this.selectedRoom
-          )
-          .forEach(booking => {
-            let date = new moment(booking.checkIn);
-            data[date.date() - 1].value++;
-          });
+    //     this.bookings
+    //       .filter(
+    //         booking =>
+    //           new moment(booking.checkIn).month() == this.selectedMonthValue &&
+    //           booking.room == this.selectedRoom
+    //       )
+    //       .forEach(booking => {
+    //         let date = new moment(booking.checkIn);
+    //         data[date.date() - 1].value++;
+    //       });
 
-        return data;
-      }
-      return [];
-    },
+    //     return data;
+    //   }
+    //   return [];
+    // },
 
     rooms() {
       return this.$store.getters["general/rooms"];
@@ -331,13 +338,58 @@ export default {
     }
   },
 
+  watch: {
+    selectedRoom() {
+      this.fetchStatistics();
+    },
+
+    selectedMonthValue() {
+      this.fetchStatistics();
+    }
+  },
+
   mounted() {
-    this.fetchBookings();
+    this.fetchStatistics();
+    // this.fetchBookings();
   },
 
   methods: {
-    async fetchBookings() {
-      this.bookings = await this.$db.Booking.asyncFind({});
+    // async fetchBookings() {
+    //   this.bookings = await this.$db.Booking.asyncFind({});
+    // },
+
+    fetchStatistics() {
+      this.$axios
+        .get(
+          "/hotels/" +
+            this.hotel._id +
+            "/statistics?month=" +
+            (this.selectedMonthValue + 1)
+        )
+        .then(response => {
+          this.statisticsByMonth = response.data;
+        })
+        .catch(console.error);
+
+      this.$axios
+        .get(
+          "/hotels/" +
+            this.hotel._id +
+            "/statistics?month=" +
+            (this.selectedMonthValue + 1) +
+            "&room=" +
+            this.selectedRoom
+        )
+        .then(response => {
+          this.statisticsByRoomAndMonth = response.data;
+        })
+        .catch(console.error);
+    }
+  },
+
+  filters: {
+    formatDate(v) {
+      return new moment(v).tz("Asia/Kolkata").format("DD MMM");
     }
   }
 };
