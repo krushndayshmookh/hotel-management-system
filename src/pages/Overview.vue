@@ -32,7 +32,7 @@
                   v-for="room in floor.rooms"
                   :key="room._id"
                 >
-                  <q-btn
+                  <!-- <q-btn
                     size="xl"
                     class="q-px-sm full-width q-py-sm"
                     :label="room.label"
@@ -43,6 +43,18 @@
                     "
                     @click="toggleOccupiedStatus(room)"
                     @contextmenu.prevent="viewRoom(room)"
+                  /> -->
+
+                  <q-btn
+                    size="xl"
+                    class="q-px-sm full-width q-py-sm"
+                    :label="room.label"
+                    :flat="!room.occupied && !room.available"
+                    :outline="room.occupied"
+                    :color="
+                      !room.available ? 'grey' : room.occupied ? 'red' : 'green'
+                    "
+                    @click="toggleOccupiedStatus(room)"
                   />
                 </div>
               </div>
